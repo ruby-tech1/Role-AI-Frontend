@@ -57,55 +57,63 @@ export default function ProjectsPage() {
     if (!isAuthenticated) return null;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="min-h-screen bg-black text-foreground antialiased font-sans">
             <Header />
 
             {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-                <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-3xl font-bold text-white">Projects</h1>
+            <main className="max-w-7xl mx-auto px-6 py-12 pt-28">
+                <div className="flex items-center justify-between mb-12">
+                    <div className="space-y-1">
+                        <h1 className="text-4xl font-black text-white tracking-tighter uppercase">Projects</h1>
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.3em]">Manage your projects</p>
+                    </div>
                     <Link
                         href="/projects/new"
-                        className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg shadow-lg transition-all duration-300 flex items-center gap-2"
+                        className="px-6 py-3.5 bg-white text-black hover:bg-white/90 font-black rounded-2xl shadow-2xl shadow-white/5 transition-all duration-300 flex items-center gap-2 uppercase text-xs tracking-widest active:scale-95"
                     >
-                        <FiPlus className="w-5 h-5" />
+                        <FiPlus className="w-4 h-4" />
                         New Project
                     </Link>
                 </div>
 
                 {projects.length === 0 ? (
-                    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-12 border border-white/20 text-center">
-                        <FiFolder className="w-16 h-16 mx-auto mb-4 text-gray-500" />
-                        <h3 className="text-xl font-semibold text-white mb-2">No projects yet</h3>
-                        <p className="text-gray-400 mb-6">Create your first project to get started with the AI assistant.</p>
+                    <div className="glass-panel rounded-3xl p-16 border-white/5 text-center animate-in fade-in zoom-in duration-500">
+                        <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10">
+                            <FiFolder className="w-8 h-8 text-white/20" />
+                        </div>
+                        <h3 className="text-2xl font-black text-white mb-2 uppercase tracking-tight">No Projects Found</h3>
+                        <p className="text-muted-foreground mb-10 max-w-sm mx-auto font-medium">Create your first project to start collaborating with the AI assistant.</p>
                         <Link
                             href="/projects/new"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg shadow-lg transition-all duration-300"
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black hover:bg-white/90 font-black rounded-2xl shadow-2xl shadow-white/5 transition-all duration-500 uppercase text-xs tracking-widest active:scale-95"
                         >
                             <FiPlus className="w-5 h-5" />
                             Create Project
                         </Link>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {projects.map((project) => (
                             <Link
                                 key={project.id}
                                 href={`/projects/${project.id}`}
-                                className="block p-6 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 hover:border-purple-500/50 transition-all duration-300 group"
+                                className="block p-7 glass-card border-white/5 hover:border-white/20 rounded-3xl transition-all duration-500 group animate-in slide-in-from-bottom-4 duration-500"
                             >
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 group-hover:bg-purple-500/30 transition">
-                                        <FiFolder className="w-6 h-6" />
+                                <div className="flex items-start justify-between mb-6">
+                                    <div className="w-14 h-14 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-white/40 group-hover:bg-white/10 group-hover:text-white transition-all duration-500">
+                                        <FiFolder className="w-7 h-7" />
                                     </div>
-                                    <span className="text-xs text-gray-500">
-                                        {new Date(project.created_at).toLocaleDateString()}
+                                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                                        {new Date(project.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                                     </span>
                                 </div>
-                                <h3 className="text-lg font-semibold text-white mb-2">{project.name}</h3>
-                                <p className="text-sm text-gray-400 line-clamp-2">
-                                    {project.description || 'No description'}
+                                <h3 className="text-xl font-bold text-white mb-2 tracking-tight group-hover:translate-x-1 transition-transform duration-300">{project.name}</h3>
+                                <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed font-medium mb-6">
+                                    {project.description || 'No description provided for this project.'}
                                 </p>
+                                <div className="flex items-center gap-2 text-[10px] font-black text-white/20 uppercase tracking-[0.2em] group-hover:text-white/60 transition-colors duration-500">
+                                    View Details <FiPlus className="w-2.5 h-2.5" />
+                                </div>
                             </Link>
                         ))}
                     </div>

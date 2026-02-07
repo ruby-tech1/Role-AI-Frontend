@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, InputHTMLAttributes } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 interface PasswordInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
     label: string;
@@ -12,25 +12,25 @@ export function PasswordInput({ label, id, className, ...props }: PasswordInputP
 
     return (
         <div>
-            <label htmlFor={id} className="block text-sm font-medium text-gray-200 mb-2">
+            <label htmlFor={id} className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
                 {label}
             </label>
-            <div className="relative">
+            <div className="relative group/input">
                 <input
                     id={id}
                     type={showPassword ? 'text' : 'password'}
-                    className={`w-full px-4 py-3 pr-12 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition ${className || ''}`}
+                    className={`w-full px-5 py-4 pr-14 bg-black/40 border border-white/5 rounded-2xl text-white placeholder:text-white/10 focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium ${className || ''}`}
                     {...props}
                 />
                 <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-white transition"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 text-white/20 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 group-hover/input:text-white/40"
                 >
                     {showPassword ? (
-                        <FaEyeSlash className="w-5 h-5" />
+                        <FiEyeOff className="w-5 h-5" />
                     ) : (
-                        <FaEye className="w-5 h-5" />
+                        <FiEye className="w-5 h-5" />
                     )}
                 </button>
             </div>

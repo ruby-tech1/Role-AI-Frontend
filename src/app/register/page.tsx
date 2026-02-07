@@ -4,7 +4,7 @@ import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { PasswordInput } from '@/components/ui/PasswordInput';
-import { FaSpinner } from 'react-icons/fa';
+import { FiRefreshCcw } from 'react-icons/fi';
 
 export default function RegisterPage() {
     const { register, error, clearError, isLoading } = useAuth();
@@ -39,26 +39,33 @@ export default function RegisterPage() {
     const displayError = localError || error;
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-12">
-            <div className="w-full max-w-md p-8">
-                <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-xl p-8 border border-white/20">
+        <div className="min-h-screen flex items-center justify-center bg-black text-foreground antialiased font-sans p-6 overflow-hidden relative py-24">
+            {/* Background elements */}
+            <div className="absolute top-0 left-0 w-96 h-96 bg-white/[0.02] rounded-full -translate-y-1/2 -translate-x-1/2 blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/[0.01] rounded-full translate-y-1/2 translate-x-1/2 blur-3xl animate-pulse" />
+
+            <div className="w-full max-w-md relative z-10">
+                <div className="glass-panel border-white/5 rounded-[2.5rem] p-12 shadow-2xl overflow-hidden group">
                     {/* Header */}
-                    <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
-                        <p className="text-gray-300">Join the Role-Aware AI Assistant</p>
+                    <div className="text-center mb-12">
+                        <div className="w-16 h-16 bg-white text-black rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-white/20 transform rotate-6 group-hover:rotate-0 transition-transform duration-500">
+                            <span className="font-black text-2xl tracking-tighter">AI</span>
+                        </div>
+                        <h1 className="text-4xl font-black text-white mb-2 tracking-tighter uppercase">Create Account</h1>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.4em] opacity-40">Create a new account</p>
                     </div>
 
                     {/* Error Message */}
                     {displayError && (
-                        <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
-                            <p className="text-red-200 text-sm text-center">{displayError}</p>
+                        <div className="mb-8 p-5 bg-destructive/10 border border-destructive/20 rounded-2xl animate-in shake duration-500">
+                            <p className="text-destructive text-[10px] font-black uppercase tracking-widest text-center leading-relaxed">{displayError}</p>
                         </div>
                     )}
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-5">
-                        <div>
-                            <label htmlFor="fullName" className="block text-sm font-medium text-gray-200 mb-2">
+                        <div className="space-y-1.5">
+                            <label htmlFor="fullName" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
                                 Full Name
                             </label>
                             <input
@@ -67,14 +74,14 @@ export default function RegisterPage() {
                                 value={fullName}
                                 onChange={(e) => setFullName(e.target.value)}
                                 required
-                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
-                                placeholder="John Doe"
+                                className="w-full px-5 py-4 bg-black/40 border border-white/5 rounded-2xl text-white placeholder:text-white/10 focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium"
+                                placeholder="Enter your full name..."
                             />
                         </div>
 
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
-                                Email
+                        <div className="space-y-1.5">
+                            <label htmlFor="email" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
+                                Email Address
                             </label>
                             <input
                                 id="email"
@@ -82,11 +89,10 @@ export default function RegisterPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                className="w-full px-5 py-4 bg-black/40 border border-white/5 rounded-2xl text-white placeholder:text-white/10 focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium"
                                 placeholder="you@example.com"
                             />
                         </div>
-
                         <PasswordInput
                             id="password"
                             label="Password"
@@ -108,12 +114,12 @@ export default function RegisterPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full py-5 px-6 bg-white text-black font-black rounded-2xl shadow-2xl shadow-white/5 hover:bg-white/90 transition-all duration-500 disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] active:scale-95 mt-4"
                         >
                             {isLoading ? (
-                                <span className="flex items-center justify-center">
-                                    <FaSpinner className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
-                                    Creating account...
+                                <span className="flex items-center justify-center gap-3">
+                                    <FiRefreshCcw className="animate-spin h-4 w-4" />
+                                    SIGNING UP...
                                 </span>
                             ) : (
                                 'Create Account'
@@ -122,22 +128,22 @@ export default function RegisterPage() {
                     </form>
 
                     {/* Terms */}
-                    <p className="mt-6 text-center text-sm text-gray-400">
-                        By signing up, you agree to our{' '}
-                        <Link href="/terms" className="text-purple-400 hover:text-purple-300 transition">
+                    <p className="mt-8 text-center text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-40 leading-relaxed px-4">
+                        By proceeding, you agree to our{' '}
+                        <Link href="/terms" className="text-white hover:underline transition-all font-black">
                             Terms of Service
                         </Link>{' '}
                         and{' '}
-                        <Link href="/privacy" className="text-purple-400 hover:text-purple-300 transition">
+                        <Link href="/privacy" className="text-white hover:underline transition-all font-black">
                             Privacy Policy
                         </Link>
                     </p>
 
                     {/* Login Link */}
-                    <p className="mt-6 text-center text-gray-400">
+                    <p className="mt-12 text-center text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">
                         Already have an account?{' '}
-                        <Link href="/login" className="text-purple-400 hover:text-purple-300 font-medium transition">
-                            Sign in
+                        <Link href="/login" className="text-white hover:underline transition-all">
+                            Sign In
                         </Link>
                     </p>
                 </div>

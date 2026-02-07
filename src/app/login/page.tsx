@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { PasswordInput } from '@/components/ui/PasswordInput';
 import api, { ApiError } from '@/lib/api';
 import type { AuthResponse } from '@/types';
-import { FaSpinner } from 'react-icons/fa';
+import { FiRefreshCcw } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 
 export default function LoginPage() {
@@ -61,19 +61,26 @@ export default function LoginPage() {
     const displayError = googleError || error;
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-            <div className="w-full max-w-md p-8">
-                <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-xl p-8 border border-white/20">
+        <div className="min-h-screen flex items-center justify-center bg-black text-foreground antialiased font-sans p-6 overflow-hidden relative">
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/[0.01] rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
+
+            <div className="w-full max-w-md relative z-10">
+                <div className="glass-panel border-white/5 rounded-[2.5rem] p-12 shadow-2xl overflow-hidden group">
                     {/* Header */}
-                    <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
-                        <p className="text-gray-300">Sign in to your account</p>
+                    <div className="text-center mb-12">
+                        <div className="w-16 h-16 bg-white text-black rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-white/20 transform -rotate-6 group-hover:rotate-0 transition-transform duration-500">
+                            <span className="font-black text-2xl tracking-tighter">AI</span>
+                        </div>
+                        <h1 className="text-4xl font-black text-white mb-2 tracking-tighter uppercase">Login</h1>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.4em] opacity-40">Sign in to your account</p>
                     </div>
 
                     {/* Error Message */}
                     {displayError && (
-                        <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
-                            <p className="text-red-200 text-sm text-center">{displayError}</p>
+                        <div className="mb-8 p-5 bg-destructive/10 border border-destructive/20 rounded-2xl animate-in shake duration-500">
+                            <p className="text-destructive text-[10px] font-black uppercase tracking-widest text-center leading-relaxed">{displayError}</p>
                         </div>
                     )}
 
@@ -103,18 +110,21 @@ export default function LoginPage() {
                             placeholder="••••••••"
                         />
 
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center">
+                        <div className="flex items-center justify-between px-1">
+                            <div className="flex items-center gap-3 group/check cursor-pointer" onClick={() => {
+                                const el = document.getElementById('remember') as HTMLInputElement;
+                                if (el) el.click();
+                            }}>
                                 <input
                                     id="remember"
                                     type="checkbox"
-                                    className="h-4 w-4 rounded bg-white/5 border-white/10 text-purple-500 focus:ring-purple-500"
+                                    className="w-5 h-5 rounded-lg border-white/10 bg-black text-white focus:ring-white/20 transition-all appearance-none border checked:bg-white relative after:content-['✓'] after:absolute after:inset-0 after:flex after:items-center after:justify-center after:text-black after:text-[12px] after:font-black after:opacity-0 checked:after:opacity-100"
                                 />
-                                <label htmlFor="remember" className="ml-2 text-sm text-gray-300">
-                                    Remember me
+                                <label htmlFor="remember" className="text-[10px] font-black text-muted-foreground uppercase tracking-widest cursor-pointer group-hover/check:text-white transition-colors">
+                                    Remember Me
                                 </label>
                             </div>
-                            <Link href="/forgot-password" className="text-sm text-purple-400 hover:text-purple-300 transition">
+                            <Link href="/forgot-password" className="text-[10px] font-black text-white/40 hover:text-white uppercase tracking-widest transition-colors">
                                 Forgot password?
                             </Link>
                         </div>
@@ -122,12 +132,12 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full py-5 px-6 bg-white text-black font-black rounded-2xl shadow-2xl shadow-white/5 hover:bg-white/90 transition-all duration-500 disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] active:scale-95"
                         >
                             {isLoading ? (
-                                <span className="flex items-center justify-center">
-                                    <FaSpinner className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
-                                    Signing in...
+                                <span className="flex items-center justify-center gap-3">
+                                    <FiRefreshCcw className="animate-spin h-4 w-4" />
+                                    LOGGING IN...
                                 </span>
                             ) : (
                                 'Sign In'
@@ -136,10 +146,10 @@ export default function LoginPage() {
                     </form>
 
                     {/* Divider */}
-                    <div className="mt-8 flex items-center">
-                        <div className="flex-1 border-t border-white/10"></div>
-                        <span className="px-4 text-sm text-gray-400">or continue with</span>
-                        <div className="flex-1 border-t border-white/10"></div>
+                    <div className="mt-12 flex items-center px-4">
+                        <div className="flex-1 border-t border-white/5"></div>
+                        <span className="px-6 text-[9px] font-black text-white/20 uppercase tracking-[0.3em]">Or sign in with</span>
+                        <div className="flex-1 border-t border-white/5"></div>
                     </div>
 
                     {/* Google Sign In */}
@@ -147,21 +157,21 @@ export default function LoginPage() {
                         type="button"
                         onClick={() => googleLogin()}
                         disabled={googleLoading}
-                        className="mt-6 w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-lg flex items-center justify-center gap-3 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="mt-8 w-full py-4 px-6 bg-white/5 hover:bg-white/10 border border-white/5 text-white font-black rounded-2xl flex items-center justify-center gap-4 transition-all duration-500 disabled:opacity-50 uppercase text-[10px] tracking-widest"
                     >
                         {googleLoading ? (
-                            <FaSpinner className="animate-spin h-5 w-5 text-white" />
+                            <FiRefreshCcw className="animate-spin h-4 w-4" />
                         ) : (
                             <FcGoogle className="w-5 h-5" />
                         )}
-                        {googleLoading ? 'Signing in...' : 'Continue with Google'}
+                        {googleLoading ? 'Connecting...' : 'Google'}
                     </button>
 
                     {/* Register Link */}
-                    <p className="mt-8 text-center text-gray-400">
-                        Don&apos;t have an account?{' '}
-                        <Link href="/register" className="text-purple-400 hover:text-purple-300 font-medium transition">
-                            Sign up
+                    <p className="mt-12 text-center text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">
+                        New here?{' '}
+                        <Link href="/register" className="text-white hover:underline transition-all">
+                            Sign Up
                         </Link>
                     </p>
                 </div>

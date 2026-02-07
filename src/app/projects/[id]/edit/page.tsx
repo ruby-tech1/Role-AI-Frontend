@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import api, { ApiError } from '@/lib/api';
 import type { Project } from '@/types';
 import { FaSpinner } from 'react-icons/fa';
-import { FiChevronLeft } from 'react-icons/fi';
+import { FiChevronLeft, FiRefreshCcw } from 'react-icons/fi';
 import Header from '@/components/common/Header';
 
 export default function EditProjectPage({
@@ -84,37 +84,39 @@ export default function EditProjectPage({
 
     if (authLoading || isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-                <div className="flex items-center gap-3 text-white">
-                    <FaSpinner className="animate-spin h-8 w-8 text-white/50" />
-                    <span className="text-xl">Loading...</span>
-                </div>
+            <div className="min-h-screen flex items-center justify-center bg-black">
+                <div className="text-white/40 text-sm font-black tracking-widest uppercase animate-pulse">Loading...</div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="min-h-screen bg-black text-foreground antialiased font-sans">
             <Header />
 
             <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-                <div className="flex items-center gap-4 mb-8">
-                    <Link href={`/projects/${id}`} className="text-gray-400 hover:text-white transition">
+                <div className="flex items-center gap-6 mb-12">
+                    <Link href={`/projects/${id}`} className="w-12 h-12 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-white/40 hover:bg-white hover:text-black transition-all duration-500 shadow-xl">
                         <FiChevronLeft className="w-6 h-6" />
                     </Link>
-                    <h1 className="text-3xl font-bold text-white">Edit Project</h1>
+                    <div>
+                        <h1 className="text-4xl font-black text-white tracking-tighter uppercase">Edit Project</h1>
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.3em] mt-1">Update project details</p>
+                    </div>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
+                <div className="glass-panel border-white/5 rounded-3xl p-10 mb-24 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-white/[0.04] transition-all duration-700" />
+
                     {error && (
-                        <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
-                            <p className="text-red-200 text-sm">{error}</p>
+                        <div className="mb-8 p-5 bg-destructive/10 border border-destructive/20 rounded-2xl animate-in shake duration-500">
+                            <p className="text-destructive text-xs font-black uppercase tracking-widest text-center">{error}</p>
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-gray-200 mb-2">
+                    <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
+                        <div className="space-y-1.5">
+                            <label htmlFor="name" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
                                 Project Name *
                             </label>
                             <input
@@ -123,12 +125,12 @@ export default function EditProjectPage({
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
-                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                className="w-full px-5 py-4 bg-black/40 border border-white/5 rounded-2xl text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium text-[15px]"
                             />
                         </div>
 
-                        <div>
-                            <label htmlFor="description" className="block text-sm font-medium text-gray-200 mb-2">
+                        <div className="space-y-1.5">
+                            <label htmlFor="description" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
                                 Description
                             </label>
                             <textarea
@@ -136,59 +138,68 @@ export default function EditProjectPage({
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 rows={3}
-                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition resize-none"
+                                className="w-full px-5 py-4 bg-black/40 border border-white/5 rounded-2xl text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all resize-none font-medium text-[15px]"
                             />
                         </div>
 
-                        <div>
-                            <label htmlFor="context" className="block text-sm font-medium text-gray-200 mb-2">
-                                Technical Context
+                        <div className="space-y-1.5">
+                            <label htmlFor="context" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
+                                Project Context
                             </label>
                             <textarea
                                 id="context"
                                 value={context}
                                 onChange={(e) => setContext(e.target.value)}
                                 rows={4}
-                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition resize-none"
+                                className="w-full px-5 py-4 bg-black/40 border border-white/5 rounded-2xl text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all resize-none font-medium text-[15px]"
                             />
                         </div>
 
-                        <div className="flex items-center gap-3 bg-white/5 p-4 rounded-lg border border-white/10">
-                            <input
-                                id="allowPmManage"
-                                type="checkbox"
-                                checked={allowPmManage}
-                                onChange={(e) => setAllowPmManage(e.target.checked)}
-                                className="w-5 h-5 rounded border-gray-600 text-purple-600 focus:ring-purple-500 bg-gray-700"
-                            />
+                        <div className="flex items-center gap-6 bg-white/[0.02] p-6 rounded-2xl border border-white/5 group-hover:border-white/10 transition-all duration-500">
+                            <div className="relative flex items-center">
+                                <input
+                                    id="allowPmManage"
+                                    type="checkbox"
+                                    checked={allowPmManage}
+                                    onChange={(e) => setAllowPmManage(e.target.checked)}
+                                    className="w-6 h-6 rounded-lg border-white/10 bg-black text-white focus:ring-white/20 transition-all appearance-none border checked:bg-white relative after:content-['✓'] after:absolute after:inset-0 after:flex after:items-center after:justify-center after:text-black after:text-[14px] after:font-black after:opacity-0 checked:after:opacity-100"
+                                />
+                            </div>
                             <div>
-                                <label htmlFor="allowPmManage" className="block text-sm font-medium text-white">
-                                    Allow Project Managers to Manage Decisions
+                                <label htmlFor="allowPmManage" className="block text-sm font-black text-white uppercase tracking-tight">
+                                    Member Management
                                 </label>
-                                <p className="text-xs text-gray-400">
-                                    If enabled, Product Managers can approve, reject, delete, and edit design decisions.
+                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1 opacity-60">
+                                    Allow Product Managers to manage design decisions.
                                 </p>
                             </div>
                         </div>
 
-                        <div className="flex gap-4">
+                        <div className="flex gap-4 pt-6">
                             <Link
                                 href={`/projects/${id}`}
-                                className="px-6 py-3 border border-white/10 text-gray-300 hover:text-white hover:bg-white/5 font-medium rounded-lg transition"
+                                className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black rounded-2xl transition-all uppercase tracking-widest"
                             >
                                 Cancel
                             </Link>
                             <button
                                 type="submit"
                                 disabled={isSaving}
-                                className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg shadow-lg transition-all duration-300 disabled:opacity-50"
+                                className="flex-1 py-4 px-6 bg-white text-black hover:bg-white/90 font-black rounded-2xl shadow-2xl shadow-white/5 transition-all duration-500 disabled:opacity-50 uppercase text-[10px] tracking-widest active:scale-95"
                             >
-                                {isSaving ? 'Saving...' : 'Save Changes'}
+                                {isSaving ? (
+                                    <span className="flex items-center justify-center gap-3">
+                                        <FiRefreshCcw className="animate-spin h-4 w-4" />
+                                        SAVING...
+                                    </span>
+                                ) : (
+                                    'Save Changes'
+                                )}
                             </button>
                         </div>
                     </form>
                 </div>
-            </main>
-        </div>
+            </main >
+        </div >
     );
 }

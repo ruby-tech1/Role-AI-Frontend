@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { PasswordInput } from '@/components/ui/PasswordInput';
 import api, { ApiError } from '@/lib/api';
-import { FaSpinner } from 'react-icons/fa';
+import { FiRefreshCcw } from 'react-icons/fi';
+import Header from '@/components/common/Header';
 
 export default function ProfilePage() {
     const { user, isLoading: authLoading, isAuthenticated, logout } = useAuth();
@@ -93,12 +94,10 @@ export default function ProfilePage() {
 
     if (authLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-                <div className="flex items-center gap-3 text-white">
-                    <div className="flex items-center gap-3 text-white">
-                        <FaSpinner className="animate-spin h-8 w-8 text-white/50" />
-                        <span className="text-xl">Loading...</span>
-                    </div>
+            <div className="min-h-screen flex items-center justify-center bg-black">
+                <div className="flex flex-col items-center gap-6">
+                    <FiRefreshCcw className="animate-spin h-10 w-10 text-white/20" />
+                    <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.4em]">Loading...</span>
                 </div>
             </div>
         );
@@ -107,51 +106,37 @@ export default function ProfilePage() {
     if (!isAuthenticated) return null;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-            {/* Header */}
-            <header className="bg-white/5 backdrop-blur-lg border-b border-white/10">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16">
-                        <div className="flex items-center gap-4">
-                            <a href="/dashboard" className="text-xl font-bold text-white hover:text-purple-400 transition">
-                                Role-Aware AI
-                            </a>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <span className="text-gray-300">{user?.full_name}</span>
-                            <button
-                                onClick={logout}
-                                className="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition"
-                            >
-                                Logout
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
+        <div className="min-h-screen bg-black text-foreground antialiased font-sans">
+            <Header />
             {/* Main Content */}
-            <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <h1 className="text-3xl font-bold text-white mb-8">Profile Settings</h1>
+            <main className="max-w-3xl mx-auto px-6 py-12 pt-32">
+                <div className="mb-16">
+                    <h1 className="text-5xl font-black text-white tracking-tighter uppercase mb-2">My Profile</h1>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.4em] opacity-40">Update your personal information and password</p>
+                </div>
 
                 {/* Profile Update Form */}
-                <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 mb-8">
-                    <h2 className="text-xl font-semibold text-white mb-4">Personal Information</h2>
+                <div className="glass-panel border-white/5 rounded-[2.5rem] p-12 mb-12 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50" />
+
+                    <div className="flex items-center gap-4 mb-12 relative z-10">
+                        <div className="w-1.5 h-6 bg-white rounded-full" />
+                        <h2 className="text-xl font-black text-white uppercase tracking-tight">Personal Information</h2>
+                    </div>
 
                     {profileSuccess && (
-                        <div className="mb-4 p-3 bg-green-500/20 border border-green-500/50 rounded-lg">
-                            <p className="text-green-200 text-sm">Profile updated successfully!</p>
+                        <div className="mb-10 p-5 bg-white/5 border border-white/10 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-500">
+                            <p className="text-white text-[10px] font-black uppercase tracking-widest text-center">Profile updated successfully</p>
                         </div>
                     )}
                     {profileError && (
-                        <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg">
-                            <p className="text-red-200 text-sm">{profileError}</p>
+                        <div className="mb-10 p-5 bg-destructive/10 border border-destructive/20 rounded-2xl animate-in shake duration-500">
+                            <p className="text-destructive text-[10px] font-black uppercase tracking-widest text-center leading-relaxed">{profileError}</p>
                         </div>
                     )}
-
-                    <form onSubmit={handleProfileUpdate} className="space-y-4">
-                        <div>
-                            <label htmlFor="fullName" className="block text-sm font-medium text-gray-200 mb-2">
+                    <form onSubmit={handleProfileUpdate} className="space-y-8 relative z-10">
+                        <div className="space-y-1.5">
+                            <label htmlFor="fullName" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
                                 Full Name
                             </label>
                             <input
@@ -160,13 +145,14 @@ export default function ProfilePage() {
                                 value={fullName}
                                 onChange={(e) => setFullName(e.target.value)}
                                 required
-                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                className="w-full px-5 py-4 bg-black/40 border border-white/5 rounded-2xl text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium"
+                                placeholder="Enter your full name..."
                             />
                         </div>
 
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
-                                Email
+                        <div className="space-y-1.5">
+                            <label htmlFor="email" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
+                                Email Address
                             </label>
                             <input
                                 id="email"
@@ -174,36 +160,48 @@ export default function ProfilePage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                className="w-full px-5 py-4 bg-black/40 border border-white/5 rounded-2xl text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium"
                             />
                         </div>
 
                         <button
                             type="submit"
                             disabled={profileLoading}
-                            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg shadow-lg transition-all duration-300 disabled:opacity-50"
+                            className="px-10 py-4 bg-white text-black font-black rounded-2xl shadow-2xl shadow-white/5 hover:bg-white/90 transition-all duration-300 disabled:opacity-50 uppercase text-[10px] tracking-widest"
                         >
-                            {profileLoading ? 'Saving...' : 'Save Changes'}
+                            {profileLoading ? (
+                                <span className="flex items-center gap-3">
+                                    <FiRefreshCcw className="animate-spin w-4 h-4" />
+                                    SAVING...
+                                </span>
+                            ) : (
+                                'Update Profile'
+                            )}
                         </button>
                     </form>
                 </div>
 
                 {/* Password Change Form */}
-                <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-                    <h2 className="text-xl font-semibold text-white mb-4">Change Password</h2>
+                <div className="glass-panel border-white/5 rounded-[2.5rem] p-12 mb-24 relative overflow-hidden group">
+                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/[0.01] rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl opacity-50" />
+
+                    <div className="flex items-center gap-4 mb-12 relative z-10">
+                        <div className="w-1.5 h-6 bg-white rounded-full opacity-40" />
+                        <h2 className="text-xl font-black text-white uppercase tracking-tight">Change Password</h2>
+                    </div>
 
                     {passwordSuccess && (
-                        <div className="mb-4 p-3 bg-green-500/20 border border-green-500/50 rounded-lg">
-                            <p className="text-green-200 text-sm">Password changed successfully!</p>
+                        <div className="mb-10 p-5 bg-white/5 border border-white/10 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-500">
+                            <p className="text-white text-[10px] font-black uppercase tracking-widest text-center">Password changed successfully</p>
                         </div>
                     )}
                     {passwordError && (
-                        <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg">
-                            <p className="text-red-200 text-sm">{passwordError}</p>
+                        <div className="mb-10 p-5 bg-destructive/10 border border-destructive/20 rounded-2xl animate-in shake duration-500">
+                            <p className="text-destructive text-[10px] font-black uppercase tracking-widest text-center leading-relaxed">{passwordError}</p>
                         </div>
                     )}
 
-                    <form onSubmit={handlePasswordChange} className="space-y-4">
+                    <form onSubmit={handlePasswordChange} className="space-y-6 relative z-10">
                         <PasswordInput
                             id="currentPassword"
                             label="Current Password"
@@ -234,9 +232,16 @@ export default function ProfilePage() {
                         <button
                             type="submit"
                             disabled={passwordLoading}
-                            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg shadow-lg transition-all duration-300 disabled:opacity-50"
+                            className="w-full py-5 px-6 bg-white text-black font-black rounded-2xl shadow-2xl shadow-white/5 hover:bg-white/90 transition-all duration-300 disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] mt-4"
                         >
-                            {passwordLoading ? 'Changing...' : 'Change Password'}
+                            {passwordLoading ? (
+                                <span className="flex items-center justify-center gap-3">
+                                    <FiRefreshCcw className="animate-spin h-4 w-4" />
+                                    CHANGING PASSWORD...
+                                </span>
+                            ) : (
+                                'Change Password'
+                            )}
                         </button>
                     </form>
                 </div>

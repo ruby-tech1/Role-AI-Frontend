@@ -3,8 +3,7 @@
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import api from '@/lib/api';
-import { FiCheck } from 'react-icons/fi';
-import { FaSpinner } from 'react-icons/fa';
+import { FiCheck, FiRefreshCcw } from 'react-icons/fi';
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
@@ -29,32 +28,36 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-            <div className="w-full max-w-md p-8">
-                <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-xl p-8 border border-white/20">
+        <div className="min-h-screen flex items-center justify-center bg-black text-foreground antialiased font-sans p-6 overflow-hidden relative">
+            {/* Background elements */}
+            <div className="absolute top-1/2 left-1/2 w-full h-full bg-white/[0.01] rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl" />
+
+            <div className="w-full max-w-md relative z-10">
+                <div className="glass-panel border-white/5 rounded-[2.5rem] p-12 shadow-2xl overflow-hidden group">
                     {/* Header */}
-                    <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold text-white mb-2">Forgot Password</h1>
-                        <p className="text-gray-300">
+                    <div className="text-center mb-12">
+                        <div className="w-16 h-16 bg-white/5 border border-white/10 text-white rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl transform group-hover:scale-110 transition-transform duration-500">
+                            <FiRefreshCcw className={`w-8 h-8 ${isLoading ? 'animate-spin' : ''}`} />
+                        </div>
+                        <h1 className="text-4xl font-black text-white mb-2 tracking-tighter uppercase">Forgot Password</h1>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.4em] opacity-40 leading-relaxed px-4">
                             {isSubmitted
-                                ? 'Check your email for reset instructions'
-                                : "Enter your email and we'll send you a reset link"}
+                                ? 'Reset Link Sent'
+                                : 'Enter your email to reset password'}
                         </p>
                     </div>
 
                     {isSubmitted ? (
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <FiCheck className="w-8 h-8 text-green-400" />
-                                </div>
+                        <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
+                            <div className="w-20 h-20 bg-white/5 border border-white/10 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-2xl">
+                                <FiCheck className="w-10 h-10 text-white" />
                             </div>
-                            <p className="text-gray-300 mb-6">
-                                If an account exists with <strong className="text-white">{email}</strong>, you will receive a password reset email shortly.
+                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-12 leading-relaxed px-4">
+                                If the email <strong className="text-white">{email}</strong> matches our records, a reset link will be sent shortly.
                             </p>
                             <Link
                                 href="/login"
-                                className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg transition-all duration-300"
+                                className="inline-block px-10 py-4 bg-white text-black font-black rounded-2xl transition-all duration-300 shadow-2xl shadow-white/5 hover:bg-white/90 active:scale-95 uppercase text-[10px] tracking-widest"
                             >
                                 Back to Login
                             </Link>
@@ -62,14 +65,14 @@ export default function ForgotPasswordPage() {
                     ) : (
                         <>
                             {error && (
-                                <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
-                                    <p className="text-red-200 text-sm text-center">{error}</p>
+                                <div className="mb-8 p-5 bg-destructive/10 border border-destructive/20 rounded-2xl animate-in shake duration-500">
+                                    <p className="text-destructive text-[10px] font-black uppercase tracking-widest text-center leading-relaxed">{error}</p>
                                 </div>
                             )}
 
                             <form onSubmit={handleSubmit} className="space-y-6">
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
+                                <div className="space-y-1.5">
+                                    <label htmlFor="email" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
                                         Email Address
                                     </label>
                                     <input
@@ -78,7 +81,7 @@ export default function ForgotPasswordPage() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
-                                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                        className="w-full px-5 py-4 bg-black/40 border border-white/5 rounded-2xl text-white placeholder:text-white/10 focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium"
                                         placeholder="you@example.com"
                                     />
                                 </div>
@@ -86,31 +89,22 @@ export default function ForgotPasswordPage() {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full py-5 px-6 bg-white text-black font-black rounded-2xl shadow-2xl shadow-white/5 hover:bg-white/90 transition-all duration-500 disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] active:scale-95"
                                 >
-                                    {isLoading ? (
-                                        <span className="flex items-center justify-center">
-                                            <span className="flex items-center justify-center">
-                                                <FaSpinner className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
-                                                Sending...
-                                            </span>
-                                        </span>
-                                    ) : (
-                                        'Send Reset Link'
-                                    )}
+                                    {isLoading ? 'SENDING...' : 'Send Reset Link'}
                                 </button>
                             </form>
 
-                            <p className="mt-8 text-center text-gray-400">
+                            <p className="mt-12 text-center text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">
                                 Remember your password?{' '}
-                                <Link href="/login" className="text-purple-400 hover:text-purple-300 font-medium transition">
-                                    Sign in
+                                <Link href="/login" className="text-white hover:underline transition-all">
+                                    Sign In
                                 </Link>
                             </p>
                         </>
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

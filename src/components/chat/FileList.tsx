@@ -56,32 +56,32 @@ export default function FileList({ projectId, refreshTrigger }: FileListProps) {
     // Don't hide if loading initially, show spinner
 
     return (
-        <div className="space-y-2 mt-4 px-1">
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center justify-between">
-                Project Files
-                {loading && <FiLoader className="w-3 h-3 animate-spin text-purple-500" />} {/* Better loader */}
+        <div className="space-y-3 mt-4 px-1">
+            <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center justify-between">
+                Project Assets
+                {loading && <FiLoader className="w-3 h-3 animate-spin text-white/40" />}
             </h3>
             {files.length === 0 && !loading && (
-                <p className="text-xs text-gray-500 italic">No files uploaded.</p>
+                <p className="text-[10px] text-muted-foreground/50 italic font-medium">No assets deployed.</p>
             )}
-            <div className="space-y-1">
+            <div className="space-y-1.5">
                 {files.map(file => {
                     const canDelete = isOwner || (user && file.uploaded_by_id === user.id);
                     return (
-                        <div key={file.id} className="flex items-center gap-2 p-2 bg-white/5 rounded-lg text-sm text-gray-300 hover:bg-white/10 transition group">
-                            <FiFileText className="w-4 h-4 text-purple-400 shrink-0" />
-                            <a href={file.url} target="_blank" rel="noopener noreferrer" className="truncate flex-1 hover:text-purple-300 transition" title={file.filename}>
+                        <div key={file.id} className="flex items-center gap-2 p-2.5 glass-card border-white/5 rounded-xl text-sm text-muted-foreground hover:text-white transition-all group">
+                            <FiFileText className="w-4 h-4 text-white/40 shrink-0 group-hover:text-white transition" />
+                            <a href={file.url} target="_blank" rel="noopener noreferrer" className="truncate flex-1 font-medium tracking-tight" title={file.filename}>
                                 {file.filename}
                             </a>
                             {canDelete && (
                                 <button
                                     onClick={() => handleDelete(file.id)}
                                     disabled={deleting === file.id}
-                                    className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-400 transition"
+                                    className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-destructive transition-all"
                                     title="Delete file"
                                 >
                                     {deleting === file.id ? (
-                                        <span className="w-3 h-3 border-2 border-red-500 border-t-transparent rounded-full animate-spin inline-block"></span>
+                                        <span className="w-3 h-3 border-2 border-destructive border-t-transparent rounded-full animate-spin inline-block"></span>
                                     ) : (
                                         <FiTrash2 className="w-3 h-3" />
                                     )}

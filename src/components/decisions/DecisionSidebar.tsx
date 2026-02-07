@@ -147,153 +147,165 @@ export default function DecisionSidebar({ projectId, initialProposal, onClearPro
 
     const getStatusColor = (status: DecisionStatus) => {
         switch (status) {
-            case 'approved': return 'bg-green-500/20 text-green-300 border-green-500/30';
-            case 'rejected': return 'bg-red-500/20 text-red-300 border-red-500/30';
-            case 'superseded': return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
-            default: return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'; // proposed
+            case 'approved': return 'bg-white text-black border-white';
+            case 'rejected': return 'bg-white/5 text-destructive border-destructive/20';
+            case 'superseded': return 'bg-white/5 text-muted-foreground border-white/10';
+            default: return 'bg-white/10 text-white/70 border-white/20'; // proposed
         }
     };
 
     return (
-        <div className="flex flex-col h-full bg-slate-900 border-l border-white/10 w-80 shrink-0 transition-all">
-            <div className="p-4 border-b border-white/10 flex items-center justify-between shrink-0">
-                <h2 className="font-semibold text-white">Design Decisions</h2>
+        <div className="flex flex-col h-full glass-panel border-l border-white/5 w-80 shrink-0 transition-all duration-500 overflow-hidden">
+            <div className="p-4 border-b border-white/5 flex items-center justify-between shrink-0 bg-black/20">
+                <h2 className="text-sm font-black text-white uppercase tracking-widest">History</h2>
                 <button
                     onClick={fetchDecisions}
-                    className="text-gray-400 hover:text-white transition"
-                    title="Refresh"
+                    className="p-1.5 text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300"
+                    title="Refresh History"
                 >
-                    <FiRefreshCcw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                    <FiRefreshCcw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
                 </button>
             </div>
 
             {/* Create New Decision Button */}
-            <div className="p-4 border-b border-white/10 shrink-0">
+            <div className="p-4 border-b border-white/5 shrink-0">
                 <button
                     onClick={() => setIsCreateOpen(!isCreateOpen)}
-                    className="w-full py-2 px-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm text-gray-300 flex items-center justify-center gap-2 transition"
+                    className={`w-full py-2.5 px-4 rounded-xl text-xs font-black transition-all duration-300 flex items-center justify-center gap-2 uppercase tracking-widest shadow-lg ${isCreateOpen
+                        ? 'bg-white text-black'
+                        : 'bg-white/5 hover:bg-white/10 text-muted-foreground border border-white/5'
+                        }`}
                 >
                     <FiPlus className="w-4 h-4" />
-                    Propsoe Decision
+                    Add Decision
                 </button>
-            </div>
-
-            {/* Create Form */}
-            {isCreateOpen && (
-                <div className="p-4 border-b border-white/10 bg-white/5 shrink-0">
-                    <form onSubmit={handleCreateSubmit} className="space-y-3">
-                        <input
-                            type="text"
-                            placeholder="Title"
-                            value={newDecision.title}
-                            onChange={e => setNewDecision({ ...newDecision, title: e.target.value })}
-                            className="w-full px-3 py-2 bg-slate-800 border border-white/10 rounded text-sm text-white focus:outline-none focus:border-purple-500"
-                            required
-                        />
-                        <textarea
-                            placeholder="Content details..."
-                            value={newDecision.content}
-                            onChange={e => setNewDecision({ ...newDecision, content: e.target.value })}
-                            className="w-full px-3 py-2 bg-slate-800 border border-white/10 rounded text-sm text-white focus:outline-none focus:border-purple-500 min-h-[80px]"
-                            required
-                        />
-                        <textarea
-                            placeholder="Rationale (optional)..."
-                            value={newDecision.rationale}
-                            onChange={e => setNewDecision({ ...newDecision, rationale: e.target.value })}
-                            className="w-full px-3 py-2 bg-slate-800 border border-white/10 rounded text-sm text-white focus:outline-none focus:border-purple-500 min-h-[60px]"
-                        />
-                        <div className="flex justify-end gap-2">
-                            <button
-                                type="button"
-                                onClick={() => setIsCreateOpen(false)}
-                                className="px-3 py-1.5 text-xs text-gray-400 hover:text-white"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs rounded transition flex items-center gap-1"
-                            >
-                                {isSubmitting && <FaSpinner className="animate-spin w-3 h-3" />}
-                                Submit
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            )}
-
-            {/* Filters */}
-            <div className="p-2 border-b border-white/10 flex gap-2 overflow-x-auto shrink-0 no-scrollbar">
-                {(['all', 'proposed', 'approved', 'rejected'] as const).map(status => (
-                    <button
-                        key={status}
-                        onClick={() => setStatusFilter(status)}
-                        className={`px-3 py-1 text-xs rounded-full border whitespace-nowrap transition capitalize
-                            ${statusFilter === status
-                                ? 'bg-purple-500 text-white border-purple-500'
-                                : 'bg-transparent text-gray-500 border-gray-700 hover:border-gray-500'}`}
-                    >
-                        {status}
-                    </button>
-                ))}
-            </div>
-
-            {/* Decision List */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {decisions.length === 0 ? (
-                    <div className="text-center text-gray-500 text-sm py-8">
-                        No decisions loggged yet.
-                    </div>
-                ) : (
-                    filteredDecisions.map(decision => (
-                        <div key={decision.id} className="bg-white/5 border border-white/10 rounded-lg p-3 hover:bg-white/10 transition group">
-                            <div className="flex justify-between items-start mb-2">
-                                <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${getStatusColor(decision.status)}`}>
-                                    {decision.status}
-                                </span>
-                                <span className="text-[10px] text-gray-500">
-                                    {new Date(decision.created_at).toLocaleDateString()}
-                                </span>
+                {/* Create Form */}
+                {isCreateOpen && (
+                    <div className="p-5 border-b border-white/5 bg-white/[0.02] shrink-0 animate-in slide-in-from-top duration-300">
+                        <form onSubmit={handleCreateSubmit} className="space-y-4">
+                            <div className="space-y-1.5">
+                                <label className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Title</label>
+                                <input
+                                    type="text"
+                                    placeholder="Enter title..."
+                                    value={newDecision.title}
+                                    onChange={e => setNewDecision({ ...newDecision, title: e.target.value })}
+                                    className="w-full px-4 py-2.5 bg-black/40 border border-white/5 rounded-xl text-sm text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium placeholder:text-white/10"
+                                    required
+                                />
                             </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Content</label>
+                                <textarea
+                                    placeholder="Enter details..."
+                                    value={newDecision.content}
+                                    onChange={e => setNewDecision({ ...newDecision, content: e.target.value })}
+                                    className="w-full px-4 py-2.5 bg-black/40 border border-white/5 rounded-xl text-sm text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium placeholder:text-white/10 min-h-[100px] resize-none"
+                                    required
+                                />
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Rationale</label>
+                                <textarea
+                                    placeholder="Enter rationale..."
+                                    value={newDecision.rationale}
+                                    onChange={e => setNewDecision({ ...newDecision, rationale: e.target.value })}
+                                    className="w-full px-4 py-2.5 bg-black/40 border border-white/5 rounded-xl text-[13px] text-white/70 focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium placeholder:text-white/10 min-h-[60px] resize-none"
+                                />
+                            </div>
+                            <div className="flex justify-end gap-3 pt-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsCreateOpen(false)}
+                                    className="px-4 py-2 text-[10px] font-black text-muted-foreground hover:text-white uppercase tracking-widest transition-all"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="px-5 py-2 bg-white text-black hover:bg-white/90 text-[10px] font-black rounded-lg transition-all duration-300 flex items-center gap-2 uppercase tracking-widest shadow-xl shadow-white/5"
+                                >
+                                    {isSubmitting && <FiRefreshCcw className="animate-spin w-3 h-3" />}
+                                    Add Decision
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )}
 
-                            <h3 className="font-medium text-white text-sm mb-1">{decision.title}</h3>
-                            <p className="text-gray-400 text-xs mb-2 line-clamp-3">{decision.content}</p>
+                {/* Filters */}
+                <div className="p-3 border-b border-white/5 flex gap-2 overflow-x-auto shrink-0 scrollbar-hide bg-black/10">
+                    {(['all', 'proposed', 'approved', 'rejected'] as const).map(status => (
+                        <button
+                            key={status}
+                            onClick={() => setStatusFilter(status)}
+                            className={`px-3 py-1.5 text-[9px] font-black rounded-lg border whitespace-nowrap transition-all duration-300 uppercase tracking-widest
+                            ${statusFilter === status
+                                    ? 'bg-white text-black border-white shadow-lg'
+                                    : 'bg-transparent text-muted-foreground border-white/5 hover:border-white/20 hover:text-white'}`}
+                        >
+                            {status}
+                        </button>
+                    ))}
+                </div>
 
-                            {decision.rationale && (
-                                <div className="bg-black/20 p-2 rounded text-xs text-gray-400 italic mb-2">
-                                    "{decision.rationale}"
+                {/* Decision List */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    {decisions.length === 0 ? (
+                        <div className="text-center text-gray-500 text-sm py-8">
+                            No decisions recorded yet.
+                        </div>
+                    ) : (
+                        filteredDecisions.map(decision => (
+                            <div key={decision.id} className="glass-card border-white/5 rounded-2xl p-4 hover:border-white/20 transition-all duration-500 group animate-in slide-in-from-right-4 duration-500">
+                                <div className="flex justify-between items-center mb-4">
+                                    <span className={`px-2 py-0.5 rounded text-[8px] font-black border tracking-[0.15em] ${getStatusColor(decision.status)}`}>
+                                        {decision.status.toUpperCase()}
+                                    </span>
+                                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+                                        {new Date(decision.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                    </span>
                                 </div>
-                            )}
 
-                            <div className="flex justify-between items-end mt-2">
-                                <div className="text-[10px] text-gray-500">
-                                    By: {decision.created_by_name || 'Unknown'}
-                                </div>
+                                <h3 className="font-bold text-white text-[15px] mb-2 tracking-tight leading-tight">{decision.title}</h3>
+                                <p className="text-muted-foreground text-xs mb-4 line-clamp-4 leading-relaxed font-medium">{decision.content}</p>
 
-                                {canApprove(decision) && (
-                                    <div className="flex gap-2">
-                                        <button
-                                            onClick={() => handleApprove(decision.id)}
-                                            className="p-1.5 bg-green-500/20 text-green-400 rounded hover:bg-green-500 hover:text-white transition"
-                                            title="Approve"
-                                        >
-                                            <FiCheck className="w-3.5 h-3.5" />
-                                        </button>
-                                        <button
-                                            onClick={() => handleReject(decision.id)}
-                                            className="p-1.5 bg-red-500/20 text-red-400 rounded hover:bg-red-500 hover:text-white transition"
-                                            title="Reject"
-                                        >
-                                            <FiX className="w-3.5 h-3.5" />
-                                        </button>
+                                {decision.rationale && (
+                                    <div className="bg-white/[0.03] border border-white/5 p-3 rounded-xl text-xs text-muted-foreground/80 italic font-medium mb-4 relative pl-8">
+                                        <span className="absolute left-3 top-2.5 text-xl leading-none text-white/20 font-serif">"</span>
+                                        {decision.rationale}
                                     </div>
                                 )}
+
+                                <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/[0.03]">
+                                    <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+                                        BY: {decision.created_by_name?.split(' ')[0] || 'Unknown'}
+                                    </div>
+
+                                    {canApprove(decision) && (
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => handleApprove(decision.id)}
+                                                className="p-2 bg-white text-black rounded-lg hover:bg-white/90 transition-all duration-300 shadow-lg shadow-white/5"
+                                                title="Approve"
+                                            >
+                                                <FiCheck className="w-3.5 h-3.5" />
+                                            </button>
+                                            <button
+                                                onClick={() => handleReject(decision.id)}
+                                                className="p-2 glass-card border-destructive/20 text-destructive hover:bg-destructive hover:text-white transition-all duration-300"
+                                                title="Reject"
+                                            >
+                                                <FiX className="w-3.5 h-3.5" />
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))
-                )}
+                        ))
+                    )}
+                </div>
             </div>
         </div>
     );

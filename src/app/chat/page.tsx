@@ -406,17 +406,17 @@ function ChatContent() {
     if (!isAuthenticated) return null;
 
     return (
-        <div className="h-screen flex bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
+        <div className="h-screen flex bg-black overflow-hidden font-sans antialiased text-foreground">
             {/* Sidebar */}
             <div
-                className={`bg-slate-900/50 backdrop-blur-xl border-r border-white/10 flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-80 translate-x-0' : 'w-0 -translate-x-full opacity-0 overflow-hidden'
+                className={`glass-panel border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-80 translate-x-0' : 'w-0 -translate-x-full opacity-0 overflow-hidden'
                     }`}
             >
                 {/* Sidebar Header (Static) */}
-                <div className="p-4 border-b border-white/10 shrink-0">
+                <div className="p-4 border-b border-white/5 shrink-0">
                     <button
                         onClick={handleNewChat}
-                        className="w-full py-2 px-4 bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition font-medium flex items-center justify-center gap-2 whitespace-nowrap"
+                        className="w-full py-2.5 px-4 bg-primary text-black hover:bg-white/90 rounded-lg transition-all duration-300 font-bold flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-white/5"
                     >
                         <FiPlus className="w-5 h-5 flex-shrink-0" />
                         New Chat
@@ -424,21 +424,21 @@ function ChatContent() {
                 </div>
 
                 {/* Sidebar Content (Scrollable) */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 min-w-[20rem]">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 min-w-[20rem] scrollbar-hide">
                     {/* Collapsible Project Context Section */}
                     {currentProjectId && (
                         <div className="mb-6">
                             <button
                                 onClick={() => setIsContextCollapsed(!isContextCollapsed)}
-                                className="flex items-center justify-between w-full text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 hover:text-white transition"
+                                className="flex items-center justify-between w-full text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em] mb-3 hover:text-white transition"
                             >
                                 <span>PROJECT FILES</span>
                                 <FiChevronDown className={`w-4 h-4 transition-transform ${isContextCollapsed ? '-rotate-90' : ''}`} />
                             </button>
                             {!isContextCollapsed && (
-                                <>
+                                <div className="space-y-4">
                                     <FileUploader
-                                        projectId={currentProjectId}
+                                        projectId={currentProjectId!}
                                         onUploadComplete={(file) => {
                                             setRefreshFiles(prev => prev + 1);
                                             if (file) {
@@ -446,8 +446,8 @@ function ChatContent() {
                                             }
                                         }}
                                     />
-                                    <FileList projectId={currentProjectId} refreshTrigger={refreshFiles} />
-                                </>
+                                    <FileList projectId={currentProjectId!} refreshTrigger={refreshFiles} />
+                                </div>
                             )}
                         </div>
                     )}
@@ -457,22 +457,22 @@ function ChatContent() {
                         <div className="mb-6">
                             <button
                                 onClick={() => setIsConversationFilesCollapsed(!isConversationFilesCollapsed)}
-                                className="flex items-center justify-between w-full text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 hover:text-white transition"
+                                className="flex items-center justify-between w-full text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em] mb-3 hover:text-white transition"
                             >
                                 <span>CONVERSATION FILES</span>
                                 <FiChevronDown className={`w-4 h-4 transition-transform ${isConversationFilesCollapsed ? '-rotate-90' : ''}`} />
                             </button>
                             {!isConversationFilesCollapsed && (
-                                <div className="space-y-1">
+                                <div className="space-y-1.5">
                                     {conversationFiles.map(file => (
                                         <a
                                             key={file.id}
                                             href={file.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-2 p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition text-sm"
+                                            className="flex items-center gap-2 p-2.5 rounded-lg glass-card border-white/5 hover:border-white/20 text-muted-foreground hover:text-white transition-all text-sm group"
                                         >
-                                            <FaPaperclip className="w-3 h-3 text-purple-400 flex-shrink-0" />
+                                            <FaPaperclip className="w-3 h-3 text-white/40 group-hover:text-white transition" />
                                             <span className="truncate">{file.filename}</span>
                                         </a>
                                     ))}
@@ -484,61 +484,61 @@ function ChatContent() {
                     {/* Collapsible History Section */}
                     <button
                         onClick={() => setIsHistoryCollapsed(!isHistoryCollapsed)}
-                        className="flex items-center justify-between w-full text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 hover:text-white transition"
+                        className="flex items-center justify-between w-full text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em] mb-2 hover:text-white transition"
                     >
                         <span>HISTORY</span>
                         <FiChevronDown className={`w-4 h-4 transition-transform ${isHistoryCollapsed ? '-rotate-90' : ''}`} />
                     </button>
                     {!isHistoryCollapsed && (
-                        <>
+                        <div className="space-y-2">
                             {isHistoryLoading ? (
-                                <div className="text-center text-gray-500 py-4">Loading history...</div>
+                                <div className="text-center text-muted-foreground py-4 text-xs font-medium">Loading history...</div>
                             ) : chats.length === 0 ? (
-                                <div className="text-center text-gray-500 py-4 text-sm">No chat history found.</div>
+                                <div className="text-center text-muted-foreground py-4 text-xs">No chat history found.</div>
                             ) : (
                                 chats.map(chat => (
                                     <button
                                         key={chat.id}
                                         onClick={() => selectChat(chat.id)}
-                                        className={`w-full text-left p-3 rounded-xl transition border ${selectedChatId === chat.id
-                                            ? 'bg-purple-500/20 border-purple-500/50 text-white'
-                                            : 'bg-white/5 border-transparent text-gray-300 hover:bg-white/10'
+                                        className={`w-full text-left p-3.5 rounded-xl transition-all duration-300 border ${selectedChatId === chat.id
+                                            ? 'bg-white/10 border-white/20 text-white'
+                                            : 'bg-transparent border-transparent text-muted-foreground hover:bg-white/5 hover:text-white'
                                             }`}
                                     >
-                                        <div className="font-medium truncate flex items-center gap-2">
-                                            <span className="truncate">{chat.title || 'Untitled Chat'}</span>
+                                        <div className="font-semibold truncate flex items-center justify-between gap-2">
+                                            <span className="truncate text-sm tracking-tight">{chat.title || 'Untitled Chat'}</span>
                                             {chat.project_id && (
-                                                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/30 text-purple-300 border border-purple-500/30 shrink-0">
-                                                    PROJECT
+                                                <span className="px-1.5 py-0.5 rounded-[4px] text-[8px] font-black bg-white/10 text-white/60 border border-white/10 shrink-0 tracking-widest uppercase">
+                                                    EXT
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="text-xs opacity-60 mt-1">
-                                            {new Date(chat.updated_at).toLocaleDateString()}
+                                        <div className="text-[10px] opacity-40 mt-1 font-medium italic">
+                                            {new Date(chat.updated_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                         </div>
                                     </button>
                                 ))
                             )}
-                        </>
+                        </div>
                     )}
                 </div>
 
                 {/* Sidebar Footer (Static) */}
-                <div className="p-4 border-t border-white/10 shrink-0">
+                <div className="p-4 border-t border-white/5 shrink-0 bg-black/40">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold flex-shrink-0">
+                        <div className="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center font-black text-sm flex-shrink-0 shadow-inner">
                             {user?.full_name?.charAt(0) || 'U'}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-white truncate">{user?.full_name}</div>
-                            <div className="text-xs text-gray-400 truncate">{user?.email}</div>
+                            <div className="text-sm font-bold text-white truncate tracking-tight">{user?.full_name}</div>
+                            <div className="text-[10px] text-muted-foreground truncate font-medium">{user?.email}</div>
                         </div>
                         <button
                             onClick={logout}
-                            className="text-gray-400 hover:text-white transition flex-shrink-0"
+                            className="p-2 text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg transition-all"
                             title="Logout"
                         >
-                            <FiLogOut className="w-5 h-5" />
+                            <FiLogOut className="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -547,20 +547,20 @@ function ChatContent() {
             {/* Main Chat Area */}
             <div className="flex-1 flex flex-col min-w-0">
                 {/* Header (Static) */}
-                <header className="bg-white/5 backdrop-blur-lg border-b border-white/10 h-16 flex items-center justify-between px-6 shrink-0 z-10">
+                <header className="glass-panel border-b border-white/5 h-16 flex items-center justify-between px-6 shrink-0 z-10">
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                            className="p-2 -ml-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 transition"
+                            className="p-2 -ml-2 text-muted-foreground hover:text-white rounded-lg hover:bg-white/5 transition-all duration-300"
                             title={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
                         >
-                            <FiMenu className="w-6 h-6" />
+                            <FiMenu className="w-5 h-5" />
                         </button>
-                        <Link href="/dashboard" className="text-xl font-bold text-white hover:text-purple-400 transition">
-                            Role-Aware AI
+                        <Link href="/dashboard" className="text-xl font-bold text-white hover:text-white/80 transition tracking-tighter">
+                            AI Project Manager
                         </Link>
                         {selectedRole && (
-                            <span className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded border border-purple-500/30">
+                            <span className="px-2 py-0.5 bg-white/10 text-white/70 text-[10px] font-black rounded border border-white/10 uppercase tracking-widest">
                                 {ROLE_LABELS[selectedRole]}
                             </span>
                         )}
@@ -569,10 +569,10 @@ function ChatContent() {
                         <select
                             value={selectedRole}
                             onChange={(e) => setSelectedRole(e.target.value as Role)}
-                            className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-white text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-white/20 transition-all cursor-pointer"
                         >
                             {Object.entries(ROLE_LABELS).map(([value, label]) => (
-                                <option key={value} value={value} className="bg-slate-800">
+                                <option key={value} value={value} className="bg-black text-white">
                                     {label}
                                 </option>
                             ))}
@@ -581,13 +581,13 @@ function ChatContent() {
                         {currentProjectId && (
                             <button
                                 onClick={() => setIsDecisionsOpen(!isDecisionsOpen)}
-                                className={`p-2 rounded-lg transition border ${isDecisionsOpen
-                                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
-                                    : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'
+                                className={`p-2 rounded-lg transition-all border ${isDecisionsOpen
+                                    ? 'bg-white text-black border-white'
+                                    : 'text-muted-foreground hover:text-white hover:bg-white/5 border-transparent'
                                     }`}
                                 title={isDecisionsOpen ? "Hide Decisions" : "Show Decisions"}
                             >
-                                <FiBook className="w-5 h-5" />
+                                <FiBook className="w-4 h-4" />
                             </button>
                         )}
                     </div>
@@ -599,9 +599,9 @@ function ChatContent() {
                         <div className="flex-1 overflow-y-auto px-4 py-6">
                             {/* Conversation Files Bar at Top */}
                             {conversationFiles.length > 0 && (
-                                <div className="max-w-3xl mx-auto mb-4 p-3 bg-purple-500/10 border border-purple-500/20 rounded-xl">
-                                    <div className="text-xs font-semibold text-purple-300 mb-2">
-                                        Files in this conversation ({conversationFiles.length})
+                                <div className="max-w-3xl mx-auto mb-6 p-4 glass-card border-white/5">
+                                    <div className="text-[10px] font-black text-muted-foreground mb-3 uppercase tracking-[0.2em]">
+                                        CONTEXTUAL FILES ({conversationFiles.length})
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {conversationFiles.map(file => (
@@ -610,10 +610,10 @@ function ChatContent() {
                                                 href={file.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-1.5 px-2 py-1 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg text-purple-200 hover:text-white text-xs transition"
+                                                className="flex items-center gap-2 px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-lg text-muted-foreground hover:text-white text-xs transition-all border border-white/5"
                                             >
-                                                <FaPaperclip className="w-3 h-3" />
-                                                <span className="truncate max-w-[120px]">{file.filename}</span>
+                                                <FaPaperclip className="w-3 h-3 text-white/40" />
+                                                <span className="truncate max-w-[150px] font-medium">{file.filename}</span>
                                             </a>
                                         ))}
                                     </div>
@@ -622,28 +622,28 @@ function ChatContent() {
 
                             <div className="max-w-3xl mx-auto space-y-6">
                                 {messages.length === 0 ? (
-                                    <div className="text-center py-20">
-                                        <div className="w-20 h-20 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                                            <BsChatDots className="w-10 h-10 text-purple-400" />
+                                    <div className="text-center py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                                        <div className="w-20 h-20 glass-card rounded-full flex items-center justify-center mx-auto mb-8 border-white/10">
+                                            <BsChatDots className="w-8 h-8 text-white/40 font-light" />
                                         </div>
-                                        <h2 className="text-2xl font-bold text-white mb-2">Start a Conversation</h2>
-                                        <p className="text-gray-400 max-w-md mx-auto">
-                                            Ask questions and get responses tailored to your role as a <strong className="text-purple-400">{ROLE_LABELS[selectedRole]}</strong>.
+                                        <h2 className="text-3xl font-bold text-white mb-3 tracking-tighter">Start a conversation</h2>
+                                        <p className="text-muted-foreground font-medium max-w-md mx-auto leading-relaxed">
+                                            Ask questions as a <strong className="text-primary">{ROLE_LABELS[selectedRole]}</strong>. Start a new session or choose an existing chat.
                                         </p>
                                     </div>
                                 ) : (
                                     messages.map((message) => (
                                         <div
                                             key={message.id}
-                                            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                                            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}
                                         >
                                             <div
-                                                className={`max-w-[85%] rounded-2xl p-4 ${message.role === 'user'
-                                                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
-                                                    : 'bg-white/10 text-white border border-white/10'
+                                                className={`max-w-[85%] rounded-2xl p-5 ${message.role === 'user'
+                                                    ? 'bg-white text-black shadow-xl shadow-white/5 font-medium'
+                                                    : 'glass-card text-white border-white/5'
                                                     }`}
                                             >
-                                                <div className={`prose ${message.role === 'user' ? 'prose-invert' : 'prose-invert'} max-w-none break-words text-sm`}>
+                                                <div className={`prose ${message.role === 'user' ? 'prose-black' : 'prose-invert'} max-w-none break-words text-[15px] leading-relaxed`}>
                                                     <ReactMarkdown
                                                         remarkPlugins={[remarkGfm]}
                                                         components={{
@@ -657,16 +657,16 @@ function ChatContent() {
                                                                 }
 
                                                                 return match ? (
-                                                                    <div className="rounded-md overflow-hidden my-2">
-                                                                        <div className="bg-gray-800 px-4 py-1 text-xs text-gray-400 flex justify-between items-center">
+                                                                    <div className="rounded-xl overflow-hidden my-4 border border-white/10">
+                                                                        <div className="bg-white/5 px-4 py-1.5 text-[10px] text-muted-foreground flex justify-between items-center font-bold tracking-widest uppercase">
                                                                             <span>{match[1]}</span>
                                                                         </div>
-                                                                        <code className={`block bg-black/50 p-4 overflow-x-auto text-sm ${className}`} {...rest}>
+                                                                        <code className={`block bg-black/60 p-5 overflow-x-auto text-sm font-mono ${className}`} {...rest}>
                                                                             {children}
                                                                         </code>
                                                                     </div>
                                                                 ) : (
-                                                                    <code className="bg-black/20 px-1 py-0.5 rounded text-sm font-mono text-purple-200" {...rest}>
+                                                                    <code className={`${message.role === 'user' ? 'bg-black/10 text-black' : 'bg-white/10 text-white'} px-1.5 py-0.5 rounded text-[13px] font-mono`} {...rest}>
                                                                         {children}
                                                                     </code>
                                                                 );
@@ -677,39 +677,39 @@ function ChatContent() {
                                                     </ReactMarkdown>
                                                 </div>
                                                 {message.decision_proposal && (
-                                                    <div className="mt-3 mb-1 bg-white/5 rounded-lg border border-white/10 overflow-hidden">
-                                                        <div className="bg-purple-600/20 px-3 py-2 border-b border-white/10 flex items-center gap-2">
-                                                            <FiBook className="w-3 h-3 text-purple-200" />
-                                                            <span className="text-[10px] font-bold text-purple-200 uppercase tracking-wide">Suggested Decision</span>
+                                                    <div className="mt-5 mb-1 glass-card border-white/10 overflow-hidden bg-white/5">
+                                                        <div className="bg-white/10 px-4 py-2 border-b border-white/5 flex items-center gap-2">
+                                                            <FiBook className="w-3 h-3 text-white/60" />
+                                                            <span className="text-[10px] font-black text-white/60 uppercase tracking-widest">Design Recommendation</span>
                                                         </div>
-                                                        <div className="p-3">
-                                                            <h4 className="text-white text-sm font-medium mb-1">{message.decision_proposal.title}</h4>
+                                                        <div className="p-4">
+                                                            <h4 className="text-white text-[15px] font-bold mb-2 tracking-tight">{message.decision_proposal.title}</h4>
                                                             <button
                                                                 onClick={() => {
                                                                     setSuggestedDecision(message.decision_proposal || null);
                                                                     setIsDecisionsOpen(true);
                                                                 }}
-                                                                className="w-full mt-2 py-1.5 bg-purple-600 hover:bg-purple-500 rounded text-white text-xs font-medium transition"
+                                                                className="w-full mt-2 py-2 bg-primary text-black hover:bg-white/90 rounded-lg text-xs font-black transition-all duration-300 uppercase tracking-widest"
                                                             >
-                                                                Review
+                                                                Review Recommendation
                                                             </button>
                                                         </div>
                                                     </div>
                                                 )}
-                                                <span className="text-xs opacity-60 mt-2 block">
-                                                    {message.timestamp.toLocaleTimeString()}
+                                                <span className={`text-[10px] font-bold uppercase tracking-widest opacity-30 mt-3 block ${message.role === 'user' ? 'text-black' : 'text-white'}`}>
+                                                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                 </span>
                                             </div>
                                         </div>
                                     ))
                                 )}
                                 {isLoading && (
-                                    <div className="flex justify-start">
-                                        <div className="bg-white/10 rounded-2xl p-4 border border-white/10">
+                                    <div className="flex justify-start animate-in fade-in duration-300">
+                                        <div className="glass-card rounded-2xl px-6 py-4 border-white/5">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                                <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                                <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                                                <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                                <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                                <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                                             </div>
                                         </div>
                                     </div>
@@ -720,38 +720,37 @@ function ChatContent() {
 
                         {/* Suggestion Banner */}
                         {suggestedDecision && (
-                            <div className="absolute bottom-full left-0 right-0 p-4 bg-gradient-to-t from-slate-900 to-transparent flex justify-center z-20 pb-2">
+                            <div className="absolute bottom-full left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent flex justify-center z-20 pb-4">
                                 <button
                                     onClick={() => {
                                         setIsDecisionsOpen(true);
-                                        // Wait for sidebar to mount/open? logic in sidebar checks prop.
                                     }}
-                                    className="flex items-center gap-3 px-4 py-3 bg-purple-600/90 hover:bg-purple-500 backdrop-blur-md rounded-xl shadow-lg border border-purple-400/50 text-white animate-fade-in-up transition-all group"
+                                    className="flex items-center gap-4 px-5 py-3.5 glass-card backdrop-blur-2xl rounded-2xl shadow-2xl border-white/10 text-white animate-in slide-in-from-bottom-4 transition-all group scale-100 hover:scale-[1.02] active:scale-95"
                                 >
-                                    <div className="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition">
-                                        <FiBook className="w-5 h-5 text-purple-100" />
+                                    <div className="bg-white/10 p-2.5 rounded-xl group-hover:bg-white/20 transition">
+                                        <FiBook className="w-5 h-5 text-white" />
                                     </div>
                                     <div className="text-left">
-                                        <div className="text-xs font-bold text-purple-200 uppercase tracking-wide">Design Decision Detected</div>
-                                        <div className="font-medium text-sm">Click to review "{suggestedDecision.title}"</div>
+                                        <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">AI Suggestion</div>
+                                        <div className="font-bold text-sm tracking-tight">Review "{suggestedDecision?.title}"</div>
                                     </div>
-                                    <div className="bg-white/10 p-1.5 rounded-full ml-2 hover:bg-white/20" onClick={(e) => {
+                                    <div className="bg-white/5 p-2 rounded-full ml-4 hover:bg-white/10 transition-colors" onClick={(e) => {
                                         e.stopPropagation();
                                         setSuggestedDecision(null);
                                     }}>
-                                        <FiX className="w-4 h-4" />
+                                        <FiX className="w-4 h-4 text-white/60" />
                                     </div>
                                 </button>
                             </div>
                         )}
 
                         {/* Input (Static) */}
-                        <div className="border-t border-white/10 bg-white/5 backdrop-blur-lg p-4 shrink-0 z-10 relative">
+                        <div className="border-t border-white/5 bg-black/40 backdrop-blur-2xl p-4 shrink-0 z-10 relative">
                             {pendingAttachments.length > 0 && (
                                 <div className="max-w-3xl mx-auto mb-3 flex flex-wrap gap-2">
                                     {pendingAttachments.map((file) => (
-                                        <div key={file.id} className="flex items-center gap-2 bg-purple-500/20 border border-purple-500/30 rounded-lg px-3 py-1.5 text-xs text-purple-200">
-                                            <FaPaperclip className="w-3 h-3" />
+                                        <div key={file.id} className="flex items-center gap-2 glass-card bg-white/5 border-white/10 rounded-lg px-3 py-2 text-xs text-muted-foreground font-medium">
+                                            <FaPaperclip className="w-3 h-3 text-white/40" />
                                             <span className="truncate max-w-[150px]" title={file.filename}>{file.filename}</span>
                                             <button
                                                 onClick={() => removePendingAttachment(file.id)}
@@ -781,13 +780,13 @@ function ChatContent() {
                                         {Object.entries(uploadProgress).map(([filename, progress]) => (
                                             <div key={filename} className="flex items-center gap-2">
                                                 <span className="text-xs text-gray-400 truncate max-w-[100px]" title={filename}>{filename}</span>
-                                                <div className="w-20 h-2 bg-white/10 rounded-full overflow-hidden">
+                                                <div className="w-20 h-1 bg-white/5 rounded-full overflow-hidden">
                                                     <div
-                                                        className={`h-full transition-all duration-200 ${progress === -1 ? 'bg-red-500' : 'bg-gradient-to-r from-purple-500 to-pink-500'}`}
+                                                        className={`h-full transition-all duration-300 ${progress === -1 ? 'bg-red-500' : 'bg-primary'}`}
                                                         style={{ width: `${progress === -1 ? 100 : progress}%` }}
                                                     />
                                                 </div>
-                                                <span className="text-xs text-gray-400">{progress === -1 ? 'Error' : `${progress}%`}</span>
+                                                <span className="text-[10px] text-muted-foreground font-bold">{progress === -1 ? 'ERROR' : `${progress}%`}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -798,15 +797,15 @@ function ChatContent() {
                                         type="button"
                                         onClick={triggerFileUpload}
                                         disabled={!currentProjectId && !selectedChatId}
-                                        className={`p-3 rounded-xl border transition-all duration-300 flex-shrink-0
+                                        className={`p-3.5 rounded-2xl border transition-all duration-300 flex-shrink-0
                                             ${(!currentProjectId && !selectedChatId)
-                                                ? 'bg-white/5 border-white/5 text-gray-500 cursor-not-allowed'
-                                                : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10 hover:border-purple-500/50'
+                                                ? 'bg-white/5 border-white/5 text-muted-foreground/30 cursor-not-allowed'
+                                                : 'bg-white/5 border-white/5 text-muted-foreground hover:text-white hover:bg-white/10 hover:border-white/20'
                                             }
                                         `}
                                         title={(!currentProjectId && !selectedChatId) ? "Select a project or start a chat to upload files" : "Attach file"}
                                     >
-                                        <FaPaperclip className="w-5 h-5" />
+                                        <FaPaperclip className="w-5 h-5 font-light" />
                                     </button>
                                 )}
 
@@ -814,13 +813,13 @@ function ChatContent() {
                                     type="text"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
-                                    placeholder="Type your message..."
-                                    className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                    placeholder="Inquire for architectural insights..."
+                                    className="flex-1 px-5 py-4 bg-white/5 border border-white/5 rounded-2xl text-white placeholder-white/30 text-sm focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium"
                                 />
                                 <button
                                     type="submit"
                                     disabled={isLoading || (!input.trim() && pendingAttachments.length === 0)}
-                                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="p-4 bg-accent hover:opacity-90 text-white font-black rounded-2xl shadow-2xl shadow-accent/20 transition-all duration-300 disabled:opacity-20 disabled:grayscale active:scale-95 flex items-center justify-center min-w-[3.5rem]"
                                 >
                                     <IoSend className="w-5 h-5" />
                                 </button>
@@ -832,7 +831,7 @@ function ChatContent() {
                     {isDecisionsOpen && currentProjectId && (
                         <DecisionSidebar
                             projectId={currentProjectId}
-                            initialProposal={suggestedDecision}
+                            initialProposal={suggestedDecision || undefined}
                             onClearProposal={() => setSuggestedDecision(null)}
                         />
                     )}
@@ -845,8 +844,8 @@ function ChatContent() {
 export default function ChatPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-                <div className="text-white text-xl">Loading chat...</div>
+            <div className="min-h-screen flex items-center justify-center bg-black">
+                <div className="text-white/40 text-sm font-black tracking-widest uppercase animate-pulse">Initializing Environment...</div>
             </div>
         }>
             <ChatContent />

@@ -21,10 +21,10 @@ export default function DashboardPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+            <div className="min-h-screen flex items-center justify-center bg-black">
                 <div className="flex items-center gap-3 text-white">
-                    <FaSpinner className="animate-spin h-8 w-8 text-white/50" />
-                    <span className="text-xl">Loading...</span>
+                    <FaSpinner className="animate-spin h-8 w-8 text-white/20" />
+                    <span className="text-xl font-light tracking-wide">Loading...</span>
                 </div>
             </div>
         );
@@ -35,18 +35,18 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="min-h-screen bg-black overflow-x-hidden">
             <Header />
 
             {/* Main Content */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
                 {/* Welcome Card */}
-                <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 mb-8">
-                    <h2 className="text-2xl font-bold text-white mb-2">
+                <div className="glass-card p-8 mb-8 border-white/5">
+                    <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
                         Welcome back, {user?.full_name?.split(' ')[0]}! 👋
                     </h2>
-                    <p className="text-gray-300">
-                        Your role-aware AI assistant is ready to help you with your projects.
+                    <p className="text-muted-foreground font-medium">
+                        Your AI engineering assistant is ready to help you with your architecture and design.
                     </p>
                 </div>
 
@@ -62,7 +62,7 @@ export default function DashboardPage() {
                     />
                     <QuickActionCard
                         title="Start Chat"
-                        description="Ask questions with role-specific context"
+                        description="Ask questions and get AI insights"
                         icon={
                             <BsChatDots className="w-6 h-6" />
                         }
@@ -82,30 +82,30 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Link
                         href="/projects"
-                        className="block p-6 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 hover:border-purple-500/50 transition-all duration-300"
+                        className="block p-6 glass-card border-white/5 hover:border-accent/40 group"
                     >
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
+                            <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center text-accent transition-colors group-hover:bg-accent/20">
                                 <FiGrid className="w-6 h-6" />
                             </div>
                             <div>
                                 <h3 className="text-lg font-semibold text-white">View All Projects</h3>
-                                <p className="text-sm text-gray-400">Manage your projects and team members</p>
+                                <p className="text-sm text-muted-foreground">Manage your projects and engineering context</p>
                             </div>
                         </div>
                     </Link>
 
                     <Link
                         href="/chat"
-                        className="block p-6 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 hover:border-purple-500/50 transition-all duration-300"
+                        className="block p-6 glass-card border-white/5 hover:border-accent/40 group"
                     >
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center text-green-400">
+                            <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center text-accent transition-colors group-hover:bg-accent/20">
                                 <BsChatDots className="w-6 h-6" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-semibold text-white">Role-Aware Chat</h3>
-                                <p className="text-sm text-gray-400">Get AI responses tailored to your role</p>
+                                <h3 className="text-lg font-semibold text-white">AI Chat</h3>
+                                <p className="text-sm text-muted-foreground">Get AI-driven engineering insights from your context</p>
                             </div>
                         </div>
                     </Link>
@@ -129,13 +129,13 @@ function QuickActionCard({
     return (
         <Link
             href={href}
-            className="block p-6 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 hover:border-purple-500/50 transition-all duration-300 group"
+            className="block p-6 glass-card border-white/5 hover:border-accent/40 group"
         >
-            <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 group-hover:bg-purple-500/30 transition mb-4">
+            <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center text-accent group-hover:bg-accent/20 transition mb-4">
                 {icon}
             </div>
             <h4 className="text-white font-semibold mb-1">{title}</h4>
-            <p className="text-sm text-gray-400">{description}</p>
+            <p className="text-sm text-muted-foreground">{description}</p>
         </Link>
     );
 }

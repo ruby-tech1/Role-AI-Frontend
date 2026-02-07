@@ -45,17 +45,17 @@ export default function FileUploader({ projectId, onUploadComplete }: FileUpload
 
     return (
         <div className="relative group">
-            <div className={`p-4 border-2 border-dashed rounded-xl transition flex flex-col items-center justify-center gap-2 text-center cursor-pointer
+            <div className={`p-6 border border-dashed rounded-2xl transition-all duration-300 flex flex-col items-center justify-center gap-3 text-center cursor-pointer
                 ${isUploading
-                    ? 'border-purple-500/50 bg-purple-500/10'
-                    : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-purple-500/50'
+                    ? 'border-white/40 bg-white/10'
+                    : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/30'
                 }`}
             >
-                <FiUploadCloud className={`w-8 h-8 ${isUploading ? 'text-purple-400 animate-bounce' : 'text-gray-400 group-hover:text-purple-400 transition'}`} />
-                <div className="text-sm text-gray-300">
-                    <span className="font-semibold text-purple-400">Click to upload</span>
+                <FiUploadCloud className={`w-8 h-8 ${isUploading ? 'text-white animate-pulse' : 'text-white/20 group-hover:text-white/60 transition-all duration-500'}`} />
+                <div className="text-xs text-white/60">
+                    <span className="font-black text-white uppercase tracking-widest">Upload Resource</span>
                 </div>
-                <p className="text-xs text-gray-500">PDF, TXT, DOCX</p>
+                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">PDF • TXT • MD • DOCX</p>
             </div>
 
             <input
@@ -66,7 +66,7 @@ export default function FileUploader({ projectId, onUploadComplete }: FileUpload
                 disabled={isUploading}
             />
 
-            {error && <div className="text-xs text-red-400 mt-2 text-center">{error}</div>}
+            {error && <div className="text-[10px] font-bold text-destructive mt-3 text-center uppercase tracking-widest">{error}</div>}
         </div>
     );
 }
