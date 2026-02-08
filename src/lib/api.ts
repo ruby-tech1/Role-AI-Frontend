@@ -7,21 +7,37 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 class ApiClient {
     private baseUrl: string;
+    private store: any = null;
 
     constructor(baseUrl: string = API_BASE_URL) {
         this.baseUrl = baseUrl;
     }
 
+    setStore(store: any) {
+        this.store = store;
+    }
+
     private getToken(): string | null {
+        if (this.store) {
+            return this.store.getState().accessToken;
+        }
         if (typeof window === 'undefined') return null;
+        // Fallback or legacy check
         return localStorage.getItem('access_token');
+    }
+
+    private getRefreshToken(): string | null {
+        if (this.store) {
+            return this.store.getState().refreshToken;
+        }
+        return null;
     }
 
     private async request<T>(
         endpoint: string,
         options: RequestInit = {}
     ): Promise<APIResponse<T>> {
-        const token = this.getToken();
+        let token = this.getToken();
 
         const headers: HeadersInit = {
             'Content-Type': 'application/json',
@@ -32,10 +48,47 @@ class ApiClient {
             (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
         }
 
-        const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        let response = await fetch(`${this.baseUrl}${endpoint}`, {
             ...options,
             headers,
         });
+
+        // Handle 401 Unauthorized (Token Expiry)
+        if (response.status === 401 && this.store) {
+            const refreshToken = this.getRefreshToken();
+
+            if (refreshToken && endpoint !== '/auth/login' && endpoint !== '/auth/refresh') {
+                try {
+                    // Attempt to refresh token
+                    const refreshResponse = await fetch(`${this.baseUrl}/auth/refresh`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ refresh_token: refreshToken }),
+                    });
+
+                    if (refreshResponse.ok) {
+                        const refreshData = await refreshResponse.json();
+                        const newAccessToken = refreshData.data.access_token;
+
+                        // Update store
+                        this.store.getState().setTokens(newAccessToken, refreshToken);
+
+                        // Retry original request with new token
+                        (headers as Record<string, string>)['Authorization'] = `Bearer ${newAccessToken}`;
+                        response = await fetch(`${this.baseUrl}${endpoint}`, {
+                            ...options,
+                            headers,
+                        });
+                    } else {
+                        // Refresh failed, logout
+                        this.store.getState().logout();
+                    }
+                } catch (error) {
+                    console.error('Token refresh failed', error);
+                    this.store.getState().logout();
+                }
+            }
+        }
 
         const data: APIResponse<T> = await response.json();
 

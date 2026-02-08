@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import api from '@/lib/api';
 import type { Project } from '@/types';
-import { FaSpinner } from 'react-icons/fa';
+import { PageLoader } from '@/components/common/Loading';
 import { FiPlus, FiFolder } from 'react-icons/fi';
 import Header from '@/components/common/Header';
 
@@ -42,16 +42,7 @@ export default function ProjectsPage() {
     }, [isAuthenticated]);
 
     if (authLoading || isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-                <div className="flex items-center gap-3 text-white">
-                    <div className="flex items-center gap-3 text-white">
-                        <FaSpinner className="animate-spin h-8 w-8 text-white/50" />
-                        <span className="text-xl">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        );
+        return <PageLoader message="Fetching Projects..." />;
     }
 
     if (!isAuthenticated) return null;

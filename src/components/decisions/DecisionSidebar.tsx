@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FiCheck, FiX, FiRefreshCcw, FiPlus, FiChevronDown, FiAlertCircle } from 'react-icons/fi';
-import { FaSpinner } from 'react-icons/fa';
+import { Spinner } from '@/components/common/Loading';
 import api from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { DesignDecision, CreateDecisionRequest, DecisionStatus } from '@/types';
@@ -163,7 +163,7 @@ export default function DecisionSidebar({ projectId, initialProposal, onClearPro
                     className="p-1.5 text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300"
                     title="Refresh History"
                 >
-                    <FiRefreshCcw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+                    <Spinner size={14} className={isLoading ? 'animate-spin' : ''} />
                 </button>
             </div>
 
@@ -226,7 +226,7 @@ export default function DecisionSidebar({ projectId, initialProposal, onClearPro
                                     disabled={isSubmitting}
                                     className="px-5 py-2 bg-white text-black hover:bg-white/90 text-[10px] font-black rounded-lg transition-all duration-300 flex items-center gap-2 uppercase tracking-widest shadow-xl shadow-white/5"
                                 >
-                                    {isSubmitting && <FiRefreshCcw className="animate-spin w-3 h-3" />}
+                                    {isSubmitting && <Spinner size={12} />}
                                     Add Decision
                                 </button>
                             </div>

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
-import { FaSpinner } from 'react-icons/fa';
+import { PageLoader } from '@/components/common/Loading';
 import { FiPlus, FiFolderPlus, FiUser, FiGrid } from 'react-icons/fi';
 import { BsChatDots } from 'react-icons/bs';
 import Header from '@/components/common/Header';
@@ -20,14 +20,7 @@ export default function DashboardPage() {
     }, [isLoading, isAuthenticated, router]);
 
     if (isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-black">
-                <div className="flex items-center gap-3 text-white">
-                    <FaSpinner className="animate-spin h-8 w-8 text-white/20" />
-                    <span className="text-xl font-light tracking-wide">Loading...</span>
-                </div>
-            </div>
-        );
+        return <PageLoader message="Personalizing Dashboard..." />;
     }
 
     if (!isAuthenticated) {

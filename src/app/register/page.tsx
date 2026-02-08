@@ -2,12 +2,14 @@
 
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { PasswordInput } from '@/components/ui/PasswordInput';
 import { FiRefreshCcw } from 'react-icons/fi';
 
 export default function RegisterPage() {
     const { register, error, clearError, isLoading } = useAuth();
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -31,6 +33,7 @@ export default function RegisterPage() {
 
         try {
             await register({ email, password, full_name: fullName });
+            router.push('/dashboard');
         } catch {
             // Error is handled in context
         }

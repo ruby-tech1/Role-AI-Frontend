@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import api, { ApiError } from '@/lib/api';
 import type { Project } from '@/types';
-import { FaSpinner } from 'react-icons/fa';
+import { Spinner, PageLoader } from '@/components/common/Loading';
 import { FiChevronLeft, FiRefreshCcw } from 'react-icons/fi';
 import Header from '@/components/common/Header';
 
@@ -83,11 +83,7 @@ export default function EditProjectPage({
     };
 
     if (authLoading || isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-black">
-                <div className="text-white/40 text-sm font-black tracking-widest uppercase animate-pulse">Loading...</div>
-            </div>
-        );
+        return <PageLoader message="Modifying Project Settings..." />;
     }
 
     return (
@@ -189,7 +185,7 @@ export default function EditProjectPage({
                             >
                                 {isSaving ? (
                                     <span className="flex items-center justify-center gap-3">
-                                        <FiRefreshCcw className="animate-spin h-4 w-4" />
+                                        <Spinner size={16} />
                                         SAVING...
                                     </span>
                                 ) : (

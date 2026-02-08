@@ -13,7 +13,7 @@ import remarkGfm from 'remark-gfm';
 import FileUploader from '@/components/chat/FileUploader';
 import FileList from '@/components/chat/FileList';
 import MermaidRenderer from '@/components/artifacts/MermaidRenderer';
-import { FaSpinner } from 'react-icons/fa';
+import { Spinner, PageLoader, LoadingDots, LoadingText } from '@/components/common/Loading';
 import { FiPlus, FiLogOut, FiMenu, FiX, FiChevronDown, FiAlertCircle } from 'react-icons/fi';
 import { BsChatDots } from 'react-icons/bs';
 import { IoSend } from "react-icons/io5";
@@ -27,6 +27,7 @@ interface Message {
     content: string;
     timestamp: Date;
     decision_proposal?: CreateDecisionRequest;
+    files?: { id: string; filename: string; url: string }[];
 }
 
 function ChatContent() {
@@ -42,6 +43,8 @@ function ChatContent() {
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [selectedRole, setSelectedRole] = useState<Role>('developer');
+    const [globalRole, setGlobalRole] = useState<Role>('developer');
+    const [isRoleLocked, setIsRoleLocked] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // Sidebar State
@@ -59,7 +62,7 @@ function ChatContent() {
     const [uploadProgress, setUploadProgress] = useState<{ [filename: string]: number }>({});
 
     // Attachments State
-    const [pendingAttachments, setPendingAttachments] = useState<{ id: string; filename: string }[]>([]);
+    const [pendingAttachments, setPendingAttachments] = useState<{ id: string; filename: string; url: string }[]>([]);
 
     // Conversation files (files linked to the current chat)
     const [conversationFiles, setConversationFiles] = useState<{ id: string; filename: string; url: string }[]>([]);
@@ -70,6 +73,70 @@ function ChatContent() {
     const [isHistoryCollapsed, setIsHistoryCollapsed] = useState(false);
     const [isDecisionsOpen, setIsDecisionsOpen] = useState(false);
     const [suggestedDecision, setSuggestedDecision] = useState<CreateDecisionRequest | null>(null);
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+    const [isSuggestionsLoading, setIsSuggestionsLoading] = useState(false);
+
+    // PERSISTENCE: Load globalRole on mount
+    useEffect(() => {
+        const savedGlobalRole = localStorage.getItem('globalRole') as Role;
+        if (savedGlobalRole && Object.keys(ROLE_LABELS).includes(savedGlobalRole)) {
+            setGlobalRole(savedGlobalRole);
+            if (!queryProjectId && !queryChatId) {
+                setSelectedRole(savedGlobalRole);
+            }
+        }
+    }, []);
+
+    // ROLE ENFORCEMENT: Sync with project context
+    useEffect(() => {
+        const determineActiveRole = async () => {
+            if (!isAuthenticated) return;
+
+            let effectiveProjectId = currentProjectId;
+            if (!effectiveProjectId && selectedChatId) {
+                const activeChat = chats.find(c => c.id === selectedChatId);
+                effectiveProjectId = activeChat?.project_id || null;
+            }
+
+            if (effectiveProjectId) {
+                try {
+                    const response = await api.get<any>(`/projects/${effectiveProjectId}`);
+                    if (response.success && response.data) {
+                        // Check if owner
+                        if (response.data.owner_id === user?.id) {
+                            setIsRoleLocked(false);
+                            return;
+                        }
+
+                        // Check if user is a member with a specific role
+                        const members = response.data.members || [];
+                        const member = members.find((m: any) => m.user_id === user?.id);
+                        if (member) {
+                            setSelectedRole(member.role as Role);
+                            setIsRoleLocked(true);
+                            return;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch project role:', error);
+                }
+            }
+
+            // Fallback for non-project context: use global role and unlock
+            setSelectedRole(globalRole);
+            setIsRoleLocked(false);
+        };
+
+        determineActiveRole();
+    }, [currentProjectId, selectedChatId, user?.id, globalRole, isAuthenticated, chats]);
+
+    const handleRoleChange = (newRole: Role) => {
+        if (isRoleLocked) return;
+
+        setSelectedRole(newRole);
+        setGlobalRole(newRole);
+        localStorage.setItem('globalRole', newRole);
+    };
 
     useEffect(() => {
         if (!authLoading && !isAuthenticated) {
@@ -79,9 +146,6 @@ function ChatContent() {
 
     // Sync currentProjectId with URL param
     useEffect(() => {
-        // Only set if query param exists (or if we want to clear it when navigating away? No, typically one-way)
-        // If queryProjectId changes (e.g. navigation), we update.
-        // Also valid to allow manual clearing.
         if (queryProjectId !== currentProjectId) {
             setCurrentProjectId(queryProjectId);
         }
@@ -89,13 +153,10 @@ function ChatContent() {
 
     // RESET State when Project Context Changes
     useEffect(() => {
-        // When switching projects (or entering one), we must clear the previous chat view
-        // to avoid showing "Project A" messages while in "Project B" context.
-        // BUT only if there's no chat in URL
         if (currentProjectId && !queryChatId) {
             setSelectedChatId(null);
             setMessages([]);
-            setPendingAttachments([]); // Clear attachments from other context
+            setPendingAttachments([]);
         }
     }, [currentProjectId]);
 
@@ -109,7 +170,7 @@ function ChatContent() {
     // Load chat from URL on mount
     useEffect(() => {
         if (isAuthenticated && queryChatId && !selectedChatId) {
-            selectChat(queryChatId, false); // false = don't update URL since it's already there
+            selectChat(queryChatId, false);
         }
     }, [isAuthenticated, queryChatId]);
 
@@ -130,8 +191,36 @@ function ChatContent() {
         }
     };
 
+    const fetchSuggestions = async () => {
+        setIsSuggestionsLoading(true);
+        try {
+            const response = await api.post<{ data: string[] }>('/chat/suggestions', {
+                role: selectedRole,
+                project_id: currentProjectId || undefined
+            });
+            if (response.success && Array.isArray(response.data)) {
+                setSuggestions(response.data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch suggestions:', error);
+        } finally {
+            setIsSuggestionsLoading(false);
+        }
+    };
+
+    // Trigger suggestions when empty chat (no ID, no messages)
+    useEffect(() => {
+        if (!selectedChatId && messages.length === 0 && isAuthenticated) {
+            fetchSuggestions();
+        } else if (selectedChatId) {
+            // Clear suggestions if we are in a chat
+            setSuggestions([]);
+        }
+    }, [selectedChatId, messages.length, isAuthenticated, currentProjectId, selectedRole]);
+
     const selectChat = async (chatId: string, updateUrl: boolean = true) => {
         setSelectedChatId(chatId);
+        setSuggestions([]); // Clear suggestions immediately on selection
 
         // Update URL with chat ID
         if (updateUrl) {
@@ -156,6 +245,7 @@ function ChatContent() {
                     role: msg.role === 'model' ? 'assistant' : 'user', // Map 'model' to 'assistant'
                     content: msg.content,
                     timestamp: new Date(msg.created_at),
+                    files: msg.files ? msg.files.map((f: any) => ({ id: f.id, filename: f.filename, url: f.file_url })) : []
                 }));
                 setMessages(uiMessages);
             }
@@ -178,32 +268,18 @@ function ChatContent() {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        if ((!input.trim() && pendingAttachments.length === 0) || isLoading) return;
+    const sendMessage = async (text: string) => {
+        if ((!text.trim() && pendingAttachments.length === 0) || isLoading) return;
 
         const uiId = Date.now().toString();
-
-        let messageContent = input.trim();
-        if (pendingAttachments.length > 0) {
-            // Optimistically show attachment in message? Or separate UI?
-            // Usually separate, but for chat history it's text.
-            // Backend appends text, so front-end just shows text.
-            // We can just send the text input, and backend injects context.
-            // But we might want to locally show "Attached: foo.pdf" in the user message bubble?
-            // For now, simpler to just let backend do its thing.
-            // But user might want to see they sent a file.
-            const fileNames = pendingAttachments.map(f => f.filename).join(', ');
-            // We won't append to content here to avoid duplication if backend appends.
-            // But we want to reflect it in the UI immediately.
-            // maybe we can prepend a small indicator locally?
-        }
+        const messageContent = text.trim();
 
         const userMessage: Message = {
             id: uiId,
             role: 'user',
             content: messageContent,
             timestamp: new Date(),
+            files: [...pendingAttachments]
         };
 
         setMessages((prev) => [...prev, userMessage]);
@@ -214,10 +290,7 @@ function ChatContent() {
 
         try {
             // Determine Project ID:
-            // 1. If we have an active selected chat, use ITS project_id (regardless of filter).
-            // 2. If no chat selected (New Chat), use the current project filter/context.
             let effectiveProjectId = currentProjectId;
-
             if (selectedChatId) {
                 const activeChat = chats.find(c => c.id === selectedChatId);
                 if (activeChat) {
@@ -229,26 +302,11 @@ function ChatContent() {
                 message: userMessage.content,
                 role: selectedRole,
                 project_id: effectiveProjectId || undefined,
-                chat_id: selectedChatId || undefined, // If we had a specific chat endpoint, but here we just pass ID if needed? 
-                // Wait, the backend logic:
-                // "1. Get or Create Chat Session" -> "query = select(Chat).where(Chat.user_id == ... AND Chat.project_id == ...)"
-                // This logic implies ONE chat per project. That's a backend limitation we might be fighting.
-                // If we want multiple chats per project, the backend needs to accept `chat_id` in the request.
-                // Looking at backend `chat.py`:
-                // It CHECKS for existing session by project_id. 
-                // It does NOT seem to accept a `chat_id` to continue a specific conversation if multiple exist for a project?
-                // Actually, the backend logic at line 117 is:
-                // query = select(Chat).where(Chat.user_id == ..., Chat.project_id == request.project_id)
-                // This forces SINGLE chat per project!
-                // FIX: We need to pass the explicit chat_id if we have one.
-                // However, the `ChatRequest` schema doesn't have `chat_id`?
-                // Left as is for now, but `effectiveProjectId` ensures we at least target the correct project bucket.
-
+                chat_id: selectedChatId || undefined,
                 file_ids: attachmentsToSend
             });
 
             if (response.success && response.data) {
-                // Check for structured decision proposal from backend
                 if (response.data.decision_proposal) {
                     setSuggestedDecision(response.data.decision_proposal);
                 }
@@ -262,17 +320,13 @@ function ChatContent() {
                 };
                 setMessages((prev) => [...prev, aiMessage]);
 
-                // Update URL with new chat ID if this was a new chat
                 if (!selectedChatId && response.data.chat_id) {
                     setSelectedChatId(response.data.chat_id);
-
-                    // Silent URL update to avoid component remount/state reset
                     const params = new URLSearchParams(searchParams.toString());
                     params.set('chat', response.data.chat_id);
                     const newUrl = `/chat?${params.toString()}`;
                     window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl);
-
-                    fetchChats(); // Refresh chat list
+                    fetchChats();
                 }
             }
         } catch (error) {
@@ -287,6 +341,11 @@ function ChatContent() {
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        sendMessage(input);
     };
 
     const handleNewChat = () => {
@@ -343,7 +402,7 @@ function ChatContent() {
             setUploadProgress(prev => ({ ...prev, [file.name]: 0 }));
 
             try {
-                const response = await api.uploadWithProgress<{ id: string; filename: string }>(
+                const response = await api.uploadWithProgress<{ id: string; filename: string; url: string }>(
                     '/files/upload',
                     formData,
                     (percent) => setUploadProgress(prev => ({ ...prev, [file.name]: percent }))
@@ -360,7 +419,7 @@ function ChatContent() {
         });
 
         const results = await Promise.all(uploadPromises);
-        const successfulUploads = results.filter((r): r is { id: string; filename: string } => r !== null);
+        const successfulUploads = results.filter((r): r is { id: string; filename: string; url: string } => r !== null);
 
         if (successfulUploads.length > 0) {
             setPendingAttachments(prev => [...prev, ...successfulUploads]);
@@ -393,14 +452,7 @@ function ChatContent() {
     };
 
     if (authLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-                <div className="flex items-center gap-3 text-white">
-                    <FaSpinner className="animate-spin h-8 w-8 text-white/50" />
-                    <span className="text-xl">Loading...</span>
-                </div>
-            </div>
-        );
+        return <PageLoader message="Authenticating..." />;
     }
 
     if (!isAuthenticated) return null;
@@ -492,7 +544,7 @@ function ChatContent() {
                     {!isHistoryCollapsed && (
                         <div className="space-y-2">
                             {isHistoryLoading ? (
-                                <div className="text-center text-muted-foreground py-4 text-xs font-medium">Loading history...</div>
+                                <LoadingText text="Loading history" />
                             ) : chats.length === 0 ? (
                                 <div className="text-center text-muted-foreground py-4 text-xs">No chat history found.</div>
                             ) : (
@@ -566,17 +618,29 @@ function ChatContent() {
                         )}
                     </div>
                     <div className="flex items-center gap-4">
-                        <select
-                            value={selectedRole}
-                            onChange={(e) => setSelectedRole(e.target.value as Role)}
-                            className="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-white text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-white/20 transition-all cursor-pointer"
-                        >
-                            {Object.entries(ROLE_LABELS).map(([value, label]) => (
-                                <option key={value} value={value} className="bg-black text-white">
-                                    {label}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="relative group">
+                            <select
+                                value={selectedRole}
+                                onChange={(e) => handleRoleChange(e.target.value as Role)}
+                                disabled={isRoleLocked}
+                                className={`px-3 py-1.5 bg-black/40 border rounded-lg text-white text-xs font-semibold focus:outline-none focus:ring-1 transition-all cursor-pointer appearance-none pr-8 ${isRoleLocked ? 'border-primary/40 opacity-80 cursor-not-allowed' : 'border-white/10 focus:ring-white/20'
+                                    }`}
+                            >
+                                {Object.entries(ROLE_LABELS).map(([value, label]) => (
+                                    <option key={value} value={value} className="bg-black text-white">
+                                        {label}
+                                    </option>
+                                ))}
+                            </select>
+                            <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white/40">
+                                <FiChevronDown className="w-4 h-4" />
+                            </div>
+                            {isRoleLocked && (
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-white text-black text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-2xl z-50 uppercase tracking-widest border border-black/10">
+                                    Project Restricted Role
+                                </div>
+                            )}
+                        </div>
 
                         {currentProjectId && (
                             <button
@@ -627,9 +691,32 @@ function ChatContent() {
                                             <BsChatDots className="w-8 h-8 text-white/40 font-light" />
                                         </div>
                                         <h2 className="text-3xl font-bold text-white mb-3 tracking-tighter">Start a conversation</h2>
-                                        <p className="text-muted-foreground font-medium max-w-md mx-auto leading-relaxed">
+                                        <p className="text-muted-foreground font-medium max-w-md mx-auto leading-relaxed mb-8">
                                             Ask questions as a <strong className="text-primary">{ROLE_LABELS[selectedRole]}</strong>. Start a new session or choose an existing chat.
                                         </p>
+
+                                        {/* Suggestions */}
+                                        {isSuggestionsLoading ? (
+                                            <LoadingDots className="justify-center mt-4" />
+                                        ) : (
+                                            <div className="flex flex-col gap-3 max-w-md mx-auto">
+                                                {suggestions.map((suggestion, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => {
+                                                            setInput(suggestion);
+                                                            // Optional: Auto-submit?
+                                                            // const syntheticEvent = { preventDefault: () => {} } as FormEvent;
+                                                            // handleSubmit(syntheticEvent);
+                                                            // No, better to let user review/edit first, but populate input.
+                                                        }}
+                                                        className="p-3 text-sm text-center glass-card hover:bg-white/10 border-white/5 hover:border-white/20 rounded-xl transition-all duration-300 text-muted-foreground hover:text-white"
+                                                    >
+                                                        "{suggestion}"
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     messages.map((message) => (
@@ -643,7 +730,27 @@ function ChatContent() {
                                                     : 'glass-card text-white border-white/5'
                                                     }`}
                                             >
+
                                                 <div className={`prose ${message.role === 'user' ? 'prose-black' : 'prose-invert'} max-w-none break-words text-[15px] leading-relaxed`}>
+                                                    {message.files && message.files.length > 0 && (
+                                                        <div className="flex flex-wrap gap-2 mb-3">
+                                                            {message.files.map(file => (
+                                                                <a
+                                                                    key={file.id}
+                                                                    href={file.url}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all group no-underline ${message.role === 'user'
+                                                                        ? 'bg-black/5 hover:bg-black/10 text-black border border-black/5'
+                                                                        : 'bg-white/5 hover:bg-white/10 text-white border border-white/5'
+                                                                        }`}
+                                                                >
+                                                                    <FaPaperclip className={`w-3 h-3 ${message.role === 'user' ? 'text-black/40' : 'text-white/40'}`} />
+                                                                    <span className="truncate max-w-[150px]">{file.filename}</span>
+                                                                </a>
+                                                            ))}
+                                                        </div>
+                                                    )}
                                                     <ReactMarkdown
                                                         remarkPlugins={[remarkGfm]}
                                                         components={{
@@ -706,11 +813,7 @@ function ChatContent() {
                                 {isLoading && (
                                     <div className="flex justify-start animate-in fade-in duration-300">
                                         <div className="glass-card rounded-2xl px-6 py-4 border-white/5">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                                <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                                <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                                            </div>
+                                            <LoadingDots />
                                         </div>
                                     </div>
                                 )}
@@ -843,11 +946,7 @@ function ChatContent() {
 
 export default function ChatPage() {
     return (
-        <Suspense fallback={
-            <div className="min-h-screen flex items-center justify-center bg-black">
-                <div className="text-white/40 text-sm font-black tracking-widest uppercase animate-pulse">Initializing Environment...</div>
-            </div>
-        }>
+        <Suspense fallback={<PageLoader message="Initializing Environment..." />}>
             <ChatContent />
         </Suspense>
     );

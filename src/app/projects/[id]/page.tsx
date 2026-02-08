@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import api, { ApiError } from '@/lib/api';
 import { FiAlertCircle, FiEdit2, FiTrash2, FiPlus, FiUser, FiUserMinus, FiGrid, FiFile, FiCheckCircle, FiClock, FiChevronDown, FiChevronRight, FiUpload, FiSettings, FiRefreshCcw } from 'react-icons/fi';
 import { BsChatDots } from 'react-icons/bs';
-import { FaSpinner } from 'react-icons/fa';
+import { Spinner, PageLoader, LoadingText } from '@/components/common/Loading';
 import type { ProjectWithMembers, Role, ProjectFile, DesignDecision } from '@/types';
 import { ROLE_LABELS } from '@/types';
 import Header from '@/components/common/Header';
@@ -252,11 +252,7 @@ export default function ProjectDetailPage({
     const isOwner = project?.owner_id === user?.id;
 
     if (authLoading || isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-black">
-                <div className="text-white/40 text-sm font-black tracking-widest uppercase animate-pulse">Loading Project...</div>
-            </div>
-        );
+        return <PageLoader message="Accessing Project Cluster..." />;
     }
 
     if (error && !project) {
@@ -382,9 +378,7 @@ export default function ProjectDetailPage({
                         </div>
                     </div>
                     {loadingResources ? (
-                        <div className="flex items-center gap-3 text-white/20 py-12 justify-center italic text-xs font-bold uppercase tracking-widest animate-pulse">
-                            Loading Files...
-                        </div>
+                        <LoadingText text="Syncing Assets" />
                     ) : files.length === 0 ? (
                         <div className="p-16 border border-dashed border-white/5 rounded-3xl bg-white/[0.01] text-center">
                             <FiFile className="w-10 h-10 text-white/10 mx-auto mb-4" />
@@ -444,9 +438,7 @@ export default function ProjectDetailPage({
                         </button>
                     </div>
                     {loadingResources ? (
-                        <div className="flex items-center gap-3 text-white/20 py-12 justify-center italic text-xs font-bold uppercase tracking-widest animate-pulse">
-                            Loading Decisions...
-                        </div>
+                        <LoadingText text="Retrieving Decisions" />
                     ) : decisions.length === 0 ? (
                         <div className="p-16 border border-dashed border-white/5 rounded-3xl bg-white/[0.01] text-center">
                             <FiCheckCircle className="w-10 h-10 text-white/10 mx-auto mb-4" />

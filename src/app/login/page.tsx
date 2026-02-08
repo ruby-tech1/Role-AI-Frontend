@@ -2,16 +2,17 @@
 
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '@/contexts/AuthContext';
 import { PasswordInput } from '@/components/ui/PasswordInput';
-import api, { ApiError } from '@/lib/api';
-import type { AuthResponse } from '@/types';
+import { ApiError } from '@/lib/api';
 import { FiRefreshCcw } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 
 export default function LoginPage() {
-    const { login, error, clearError, isLoading } = useAuth();
+    const { login, loginWithGoogle, error, clearError, isLoading } = useAuth();
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [googleLoading, setGoogleLoading] = useState(false);
@@ -23,8 +24,9 @@ export default function LoginPage() {
 
         try {
             await login({ email, password });
+            router.push('/dashboard');
         } catch {
-            // Error is handled in context
+
         }
     };
 
@@ -35,15 +37,9 @@ export default function LoginPage() {
             setGoogleError(null);
 
             try {
-                const result = await api.post<AuthResponse>('/auth/google', {
-                    code: response.code,
-                });
-
-                if (result.success && result.data) {
-                    localStorage.setItem('access_token', result.data.access_token);
-                    window.location.href = '/dashboard';
-                }
-            } catch (err) {
+                await loginWithGoogle(response.code);
+                router.push('/dashboard');
+            } catch (err: any) {
                 if (err instanceof ApiError) {
                     setGoogleError(err.message);
                 } else {
@@ -61,7 +57,7 @@ export default function LoginPage() {
     const displayError = googleError || error;
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-black text-foreground antialiased font-sans p-6 overflow-hidden relative">
+        <div className="min-h-screen flex items-center justify-center bg-black text-foreground antialiased font-sans px-6 py-2 overflow-hidden relative">
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl animate-pulse" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/[0.01] rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
@@ -73,7 +69,7 @@ export default function LoginPage() {
                         <div className="w-16 h-16 bg-white text-black rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-white/20 transform -rotate-6 group-hover:rotate-0 transition-transform duration-500">
                             <span className="font-black text-2xl tracking-tighter">AI</span>
                         </div>
-                        <h1 className="text-4xl font-black text-white mb-2 tracking-tighter uppercase">Login</h1>
+                        <h1 className="text-2xl font-black text-white mb-2 tracking-tighter uppercase">Login</h1>
                         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.4em] opacity-40">Sign in to your account</p>
                     </div>
 

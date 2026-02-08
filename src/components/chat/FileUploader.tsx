@@ -4,7 +4,7 @@ import { FiUploadCloud } from 'react-icons/fi';
 
 interface FileUploaderProps {
     projectId: string;
-    onUploadComplete: (file?: { id: string; filename: string }) => void;
+    onUploadComplete: (file?: { id: string; filename: string; url: string }) => void;
 }
 
 export default function FileUploader({ projectId, onUploadComplete }: FileUploaderProps) {
@@ -27,7 +27,7 @@ export default function FileUploader({ projectId, onUploadComplete }: FileUpload
         formData.append('project_id', projectId);
 
         try {
-            const response = await api.upload<{ id: string; filename: string }>('/files/upload', formData);
+            const response = await api.upload<{ id: string; filename: string; url: string }>('/files/upload', formData);
             if (response.success && response.data) {
                 onUploadComplete(response.data);
             } else {
