@@ -12,14 +12,14 @@ export function PasswordInput({ label, id, className, ...props }: PasswordInputP
 
     return (
         <div>
-            <label htmlFor={id} className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">
+            <label htmlFor={id} className="block text-sm font-medium text-gray-200 mb-2">
                 {label}
             </label>
             <div className="relative group/input">
                 <input
                     id={id}
                     type={showPassword ? 'text' : 'password'}
-                    className={`w-full px-5 py-4 pr-14 bg-black/40 border border-white/5 rounded-2xl text-white placeholder:text-white/10 focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium ${className || ''}`}
+                    className={`w-full px-4 py-3 pr-14 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition ${className || ''}`}
                     {...props}
                 />
                 <button

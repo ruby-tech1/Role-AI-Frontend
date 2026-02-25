@@ -55,14 +55,14 @@ export default function ProjectsPage() {
             <main className="max-w-7xl mx-auto px-6 py-12 pt-28">
                 <div className="flex items-center justify-between mb-12">
                     <div className="space-y-1">
-                        <h1 className="text-4xl font-black text-white tracking-tighter uppercase">Projects</h1>
-                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.3em]">Manage your projects</p>
+                        <h1 className="text-3xl font-bold text-white tracking-tight">Projects</h1>
+                        <p className="text-sm font-medium text-muted-foreground">Manage your projects</p>
                     </div>
                     <Link
                         href="/projects/new"
-                        className="px-6 py-3.5 bg-white text-black hover:bg-white/90 font-black rounded-2xl shadow-2xl shadow-white/5 transition-all duration-300 flex items-center gap-2 uppercase text-xs tracking-widest active:scale-95"
+                        className="px-5 py-3 bg-white/10 text-white border border-white/10 hover:bg-white/20 font-semibold rounded-xl transition-all duration-300 flex items-center gap-2 text-sm active:scale-95"
                     >
-                        <FiPlus className="w-4 h-4" />
+                        <FiPlus className="w-5 h-5" />
                         New Project
                     </Link>
                 </div>
@@ -70,13 +70,13 @@ export default function ProjectsPage() {
                 {projects.length === 0 ? (
                     <div className="glass-panel rounded-3xl p-16 border-white/5 text-center animate-in fade-in zoom-in duration-500">
                         <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10">
-                            <FiFolder className="w-8 h-8 text-white/20" />
+                            <FiFolder className="w-8 h-8 text-white/40" />
                         </div>
-                        <h3 className="text-2xl font-black text-white mb-2 uppercase tracking-tight">No Projects Found</h3>
-                        <p className="text-muted-foreground mb-10 max-w-sm mx-auto font-medium">Create your first project to start collaborating with the AI assistant.</p>
+                        <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">No Projects Found</h3>
+                        <p className="text-muted-foreground mb-8 max-w-sm mx-auto font-medium">Create your first project to start collaborating with the AI assistant.</p>
                         <Link
                             href="/projects/new"
-                            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black hover:bg-white/90 font-black rounded-2xl shadow-2xl shadow-white/5 transition-all duration-500 uppercase text-xs tracking-widest active:scale-95"
+                            className="inline-flex items-center gap-2 px-6 py-4 bg-white/10 text-white border border-white/10 font-semibold rounded-xl transition-all duration-300 text-sm active:scale-95 hover:bg-white/20"
                         >
                             <FiPlus className="w-5 h-5" />
                             Create Project
@@ -94,16 +94,16 @@ export default function ProjectsPage() {
                                     <div className="w-14 h-14 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-white/40 group-hover:bg-white/10 group-hover:text-white transition-all duration-500">
                                         <FiFolder className="w-7 h-7" />
                                     </div>
-                                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                                    <span className="text-xs font-medium text-muted-foreground">
                                         {new Date(project.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                                     </span>
                                 </div>
-                                <h3 className="text-xl font-bold text-white mb-2 tracking-tight group-hover:translate-x-1 transition-transform duration-300">{project.name}</h3>
+                                <h3 className="text-xl font-bold text-white mb-2 tracking-tight group-hover:text-accent transition-colors duration-300">{project.name}</h3>
                                 <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed font-medium mb-6">
                                     {project.description || 'No description provided for this project.'}
                                 </p>
-                                <div className="flex items-center gap-2 text-[10px] font-black text-white/20 uppercase tracking-[0.2em] group-hover:text-white/60 transition-colors duration-500">
-                                    View Details <FiPlus className="w-2.5 h-2.5" />
+                                <div className="flex items-center gap-2 text-xs font-semibold text-white/40 group-hover:text-white/80 transition-colors duration-300">
+                                    View Details <FiPlus className="w-3 h-3" />
                                 </div>
                             </Link>
                         ))}

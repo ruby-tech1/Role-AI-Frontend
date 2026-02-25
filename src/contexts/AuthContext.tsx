@@ -21,5 +21,6 @@ export function useAuth() {
         register: store.register,
         logout: store.logout,
         clearError: store.clearError,
+        updateUser: store.updateUser,
     };
 }

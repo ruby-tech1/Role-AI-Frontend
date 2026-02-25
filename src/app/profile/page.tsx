@@ -9,7 +9,7 @@ import { FiRefreshCcw } from 'react-icons/fi';
 import Header from '@/components/common/Header';
 
 export default function ProfilePage() {
-    const { user, isLoading: authLoading, isAuthenticated, logout } = useAuth();
+    const { user, isLoading: authLoading, isAuthenticated, logout, updateUser } = useAuth();
     const router = useRouter();
 
     const [fullName, setFullName] = useState('');
@@ -43,6 +43,7 @@ export default function ProfilePage() {
 
         try {
             await api.patch('/users/me', { full_name: fullName, email });
+            updateUser({ full_name: fullName, email });
             setProfileSuccess(true);
         } catch (err) {
             if (err instanceof ApiError) {

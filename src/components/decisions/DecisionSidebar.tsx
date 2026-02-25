@@ -17,11 +17,14 @@ export default function DecisionSidebar({ projectId, initialProposal, onClearPro
     const [isLoading, setIsLoading] = useState(false);
     const [statusFilter, setStatusFilter] = useState<DecisionStatus | 'all'>('all');
     const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [actionLoading, setActionLoading] = useState<{ id: string, type: 'approve' | 'reject' } | null>(null);
     const [newDecision, setNewDecision] = useState<CreateDecisionRequest>({
         title: '',
         content: '',
         rationale: '',
     });
+    const [sidebarWidth, setSidebarWidth] = useState(320);
+    const [isResizing, setIsResizing] = useState(false);
 
     useEffect(() => {
         if (initialProposal) {
@@ -39,6 +42,32 @@ export default function DecisionSidebar({ projectId, initialProposal, onClearPro
             fetchProjectDetails();
         }
     }, [projectId]);
+
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            if (!isResizing) return;
+            const newWidth = document.body.clientWidth - e.clientX;
+            if (newWidth >= 300 && newWidth <= 800) {
+                setSidebarWidth(newWidth);
+            }
+        };
+        const handleMouseUp = () => setIsResizing(false);
+
+        if (isResizing) {
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+            // Prevent text selection during resize
+            document.body.style.userSelect = 'none';
+        } else {
+            document.body.style.userSelect = '';
+        }
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.body.style.userSelect = '';
+        };
+    }, [isResizing]);
 
     const fetchProjectDetails = async () => {
         try {
@@ -103,28 +132,34 @@ export default function DecisionSidebar({ projectId, initialProposal, onClearPro
     const handleApprove = async (decisionId: string) => {
         if (!confirm('Are you sure you want to approve this decision? It will be appended to the project context.')) return;
 
+        setActionLoading({ id: decisionId, type: 'approve' });
         try {
             const response = await api.patch<DesignDecision>(`/projects/${projectId}/decisions/${decisionId}/approve`, {});
             if (response.success) {
-                fetchDecisions();
+                await fetchDecisions();
             }
         } catch (error) {
             console.error('Failed to approve decision:', error);
             alert('Failed to approve decision. Ensure you have permission.');
+        } finally {
+            setActionLoading(null);
         }
     };
 
     const handleReject = async (decisionId: string) => {
         if (!confirm('Are you sure you want to reject this decision?')) return;
 
+        setActionLoading({ id: decisionId, type: 'reject' });
         try {
             const response = await api.patch<DesignDecision>(`/projects/${projectId}/decisions/${decisionId}/reject`, {});
             if (response.success) {
-                fetchDecisions();
+                await fetchDecisions();
             }
         } catch (error) {
             console.error('Failed to reject decision:', error);
             alert('Failed to reject decision. Ensure you have permission.');
+        } finally {
+            setActionLoading(null);
         }
     };
 
@@ -155,8 +190,17 @@ export default function DecisionSidebar({ projectId, initialProposal, onClearPro
     };
 
     return (
-        <div className="flex flex-col h-full glass-panel border-l border-white/5 w-80 shrink-0 transition-all duration-500 overflow-hidden">
-            <div className="p-4 border-b border-white/5 flex items-center justify-between shrink-0 bg-black/20">
+        <div
+            style={{ width: sidebarWidth, gridTemplateRows: 'auto auto auto minmax(0, 1fr)' }}
+            className={`grid h-full glass-panel border-l border-white/5 shrink-0 relative ${isResizing ? '' : 'transition-all duration-300'}`}
+        >
+            {/* Custom Left Border Resizer */}
+            <div
+                className="absolute left-0 top-0 bottom-0 w-[5px] cursor-col-resize hover:bg-white/20 transition-colors z-50"
+                onMouseDown={() => setIsResizing(true)}
+            />
+
+            <div className="p-4 border-b border-white/5 flex items-center justify-between shrink-0 bg-black/20 relative z-10">
                 <h2 className="text-sm font-black text-white uppercase tracking-widest">History</h2>
                 <button
                     onClick={fetchDecisions}
@@ -168,7 +212,7 @@ export default function DecisionSidebar({ projectId, initialProposal, onClearPro
             </div>
 
             {/* Create New Decision Button */}
-            <div className="p-4 border-b border-white/5 shrink-0">
+            <div className="p-4 border-b border-white/5 shrink-0 relative z-10">
                 <button
                     onClick={() => setIsCreateOpen(!isCreateOpen)}
                     className={`w-full py-2.5 px-4 rounded-xl text-xs font-black transition-all duration-300 flex items-center justify-center gap-2 uppercase tracking-widest shadow-lg ${isCreateOpen
@@ -233,79 +277,85 @@ export default function DecisionSidebar({ projectId, initialProposal, onClearPro
                         </form>
                     </div>
                 )}
+            </div>
 
-                {/* Filters */}
-                <div className="p-3 border-b border-white/5 flex gap-2 overflow-x-auto shrink-0 scrollbar-hide bg-black/10">
-                    {(['all', 'proposed', 'approved', 'rejected'] as const).map(status => (
-                        <button
-                            key={status}
-                            onClick={() => setStatusFilter(status)}
-                            className={`px-3 py-1.5 text-[9px] font-black rounded-lg border whitespace-nowrap transition-all duration-300 uppercase tracking-widest
-                            ${statusFilter === status
-                                    ? 'bg-white text-black border-white shadow-lg'
-                                    : 'bg-transparent text-muted-foreground border-white/5 hover:border-white/20 hover:text-white'}`}
-                        >
-                            {status}
-                        </button>
-                    ))}
-                </div>
+            {/* Filters */}
+            <div className="p-3 border-b border-white/5 flex gap-2 overflow-x-auto shrink-0 scrollbar-hide bg-black/10">
+                {(['all', 'proposed', 'approved', 'rejected'] as const).map(status => (
+                    <button
+                        key={status}
+                        onClick={() => setStatusFilter(status)}
+                        className={`px-3 py-1.5 text-[9px] font-black rounded-lg border whitespace-nowrap transition-all duration-300 uppercase tracking-widest
+                        ${statusFilter === status
+                                ? 'bg-white text-black border-white shadow-lg'
+                                : 'bg-transparent text-muted-foreground border-white/5 hover:border-white/20 hover:text-white'}`}
+                    >
+                        {status}
+                    </button>
+                ))}
+            </div>
 
-                {/* Decision List */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {decisions.length === 0 ? (
-                        <div className="text-center text-gray-500 text-sm py-8">
-                            No decisions recorded yet.
-                        </div>
-                    ) : (
-                        filteredDecisions.map(decision => (
-                            <div key={decision.id} className="glass-card border-white/5 rounded-2xl p-4 hover:border-white/20 transition-all duration-500 group animate-in slide-in-from-right-4 duration-500">
-                                <div className="flex justify-between items-center mb-4">
-                                    <span className={`px-2 py-0.5 rounded text-[8px] font-black border tracking-[0.15em] ${getStatusColor(decision.status)}`}>
-                                        {decision.status.toUpperCase()}
-                                    </span>
-                                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
-                                        {new Date(decision.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                                    </span>
+            {/* Decision List */}
+            <div className="overflow-y-auto min-h-0 p-4 space-y-4 pr-2">
+                {isLoading && decisions.length === 0 ? (
+                    <div className="flex justify-center py-8">
+                        <Spinner size={24} className="text-muted-foreground/50" />
+                    </div>
+                ) : decisions.length === 0 ? (
+                    <div className="text-center text-gray-500 text-sm py-8">
+                        No decisions recorded yet.
+                    </div>
+                ) : (
+                    filteredDecisions.map(decision => (
+                        <div key={decision.id} className="glass-card border-white/5 rounded-2xl p-4 hover:border-white/20 transition-all duration-500 group animate-in slide-in-from-right-4 duration-500">
+                            <div className="flex justify-between items-center mb-4">
+                                <span className={`px-2 py-0.5 rounded text-[8px] font-black border tracking-[0.15em] ${getStatusColor(decision.status)}`}>
+                                    {decision.status.toUpperCase()}
+                                </span>
+                                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+                                    {new Date(decision.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                </span>
+                            </div>
+
+                            <h3 className="font-bold text-white text-[15px] mb-2 tracking-tight leading-tight">{decision.title}</h3>
+                            <p className="text-muted-foreground text-xs mb-4 line-clamp-4 leading-relaxed font-medium">{decision.content}</p>
+
+                            {decision.rationale && (
+                                <div className="bg-white/[0.03] border border-white/5 p-3 rounded-xl text-xs text-muted-foreground/80 italic font-medium mb-4 relative pl-8">
+                                    <span className="absolute left-3 top-2.5 text-xl leading-none text-white/20 font-serif">"</span>
+                                    {decision.rationale}
+                                </div>
+                            )}
+
+                            <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/[0.03]">
+                                <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+                                    BY: {decision.created_by_name?.split(' ')[0] || 'Unknown'}
                                 </div>
 
-                                <h3 className="font-bold text-white text-[15px] mb-2 tracking-tight leading-tight">{decision.title}</h3>
-                                <p className="text-muted-foreground text-xs mb-4 line-clamp-4 leading-relaxed font-medium">{decision.content}</p>
-
-                                {decision.rationale && (
-                                    <div className="bg-white/[0.03] border border-white/5 p-3 rounded-xl text-xs text-muted-foreground/80 italic font-medium mb-4 relative pl-8">
-                                        <span className="absolute left-3 top-2.5 text-xl leading-none text-white/20 font-serif">"</span>
-                                        {decision.rationale}
+                                {canApprove(decision) && (
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => handleApprove(decision.id)}
+                                            disabled={actionLoading !== null}
+                                            className="p-2 bg-white text-black rounded-lg hover:bg-white/90 transition-all duration-300 shadow-lg shadow-white/5 disabled:opacity-50"
+                                            title="Approve"
+                                        >
+                                            {actionLoading?.id === decision.id && actionLoading.type === 'approve' ? <Spinner size={14} className="text-black" /> : <FiCheck className="w-3.5 h-3.5" />}
+                                        </button>
+                                        <button
+                                            onClick={() => handleReject(decision.id)}
+                                            disabled={actionLoading !== null}
+                                            className="p-2 glass-card border-destructive/20 text-destructive hover:bg-destructive hover:text-white transition-all duration-300 disabled:opacity-50"
+                                            title="Reject"
+                                        >
+                                            {actionLoading?.id === decision.id && actionLoading.type === 'reject' ? <Spinner size={14} /> : <FiX className="w-3.5 h-3.5" />}
+                                        </button>
                                     </div>
                                 )}
-
-                                <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/[0.03]">
-                                    <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
-                                        BY: {decision.created_by_name?.split(' ')[0] || 'Unknown'}
-                                    </div>
-
-                                    {canApprove(decision) && (
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => handleApprove(decision.id)}
-                                                className="p-2 bg-white text-black rounded-lg hover:bg-white/90 transition-all duration-300 shadow-lg shadow-white/5"
-                                                title="Approve"
-                                            >
-                                                <FiCheck className="w-3.5 h-3.5" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleReject(decision.id)}
-                                                className="p-2 glass-card border-destructive/20 text-destructive hover:bg-destructive hover:text-white transition-all duration-300"
-                                                title="Reject"
-                                            >
-                                                <FiX className="w-3.5 h-3.5" />
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
                             </div>
-                        ))
-                    )}
-                </div>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );

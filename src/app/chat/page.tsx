@@ -482,9 +482,9 @@ function ChatContent() {
                         <div className="mb-6">
                             <button
                                 onClick={() => setIsContextCollapsed(!isContextCollapsed)}
-                                className="flex items-center justify-between w-full text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em] mb-3 hover:text-white transition"
+                                className="flex items-center justify-between w-full text-xs font-semibold text-muted-foreground tracking-wider mb-3 hover:text-white transition"
                             >
-                                <span>PROJECT FILES</span>
+                                <span>Project Files</span>
                                 <FiChevronDown className={`w-4 h-4 transition-transform ${isContextCollapsed ? '-rotate-90' : ''}`} />
                             </button>
                             {!isContextCollapsed && (
@@ -509,9 +509,9 @@ function ChatContent() {
                         <div className="mb-6">
                             <button
                                 onClick={() => setIsConversationFilesCollapsed(!isConversationFilesCollapsed)}
-                                className="flex items-center justify-between w-full text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em] mb-3 hover:text-white transition"
+                                className="flex items-center justify-between w-full text-xs font-semibold text-muted-foreground tracking-wider mb-3 hover:text-white transition"
                             >
-                                <span>CONVERSATION FILES</span>
+                                <span>Conversation Files</span>
                                 <FiChevronDown className={`w-4 h-4 transition-transform ${isConversationFilesCollapsed ? '-rotate-90' : ''}`} />
                             </button>
                             {!isConversationFilesCollapsed && (
@@ -536,9 +536,9 @@ function ChatContent() {
                     {/* Collapsible History Section */}
                     <button
                         onClick={() => setIsHistoryCollapsed(!isHistoryCollapsed)}
-                        className="flex items-center justify-between w-full text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em] mb-2 hover:text-white transition"
+                        className="flex items-center justify-between w-full text-xs font-semibold text-muted-foreground tracking-wider mb-2 hover:text-white transition"
                     >
-                        <span>HISTORY</span>
+                        <span>History</span>
                         <FiChevronDown className={`w-4 h-4 transition-transform ${isHistoryCollapsed ? '-rotate-90' : ''}`} />
                     </button>
                     {!isHistoryCollapsed && (
@@ -565,7 +565,7 @@ function ChatContent() {
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="text-[10px] opacity-40 mt-1 font-medium italic">
+                                        <div className="text-xs text-muted-foreground mt-1 font-medium">
                                             {new Date(chat.updated_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                         </div>
                                     </button>
@@ -583,7 +583,7 @@ function ChatContent() {
                         </div>
                         <div className="flex-1 min-w-0">
                             <div className="text-sm font-bold text-white truncate tracking-tight">{user?.full_name}</div>
-                            <div className="text-[10px] text-muted-foreground truncate font-medium">{user?.email}</div>
+                            <div className="text-xs text-muted-foreground truncate font-medium">{user?.email}</div>
                         </div>
                         <button
                             onClick={logout}
@@ -612,7 +612,7 @@ function ChatContent() {
                             AI Project Manager
                         </Link>
                         {selectedRole && (
-                            <span className="px-2 py-0.5 bg-white/10 text-white/70 text-[10px] font-black rounded border border-white/10 uppercase tracking-widest">
+                            <span className="px-2.5 py-1 bg-white/10 text-white/80 text-xs font-semibold rounded-md border border-white/10">
                                 {ROLE_LABELS[selectedRole]}
                             </span>
                         )}
@@ -636,7 +636,7 @@ function ChatContent() {
                                 <FiChevronDown className="w-4 h-4" />
                             </div>
                             {isRoleLocked && (
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-white text-black text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-2xl z-50 uppercase tracking-widest border border-black/10">
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-white text-black text-xs font-semibold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl z-50">
                                     Project Restricted Role
                                 </div>
                             )}
@@ -657,15 +657,15 @@ function ChatContent() {
                     </div>
                 </header>
 
-                <div className="flex-1 flex overflow-hidden">
+                <div className="flex-1 flex overflow-hidden min-h-0">
                     <div className="flex-1 flex flex-col min-w-0">
                         {/* Messages (Scrollable) */}
                         <div className="flex-1 overflow-y-auto px-4 py-6">
                             {/* Conversation Files Bar at Top */}
                             {conversationFiles.length > 0 && (
                                 <div className="max-w-3xl mx-auto mb-6 p-4 glass-card border-white/5">
-                                    <div className="text-[10px] font-black text-muted-foreground mb-3 uppercase tracking-[0.2em]">
-                                        CONTEXTUAL FILES ({conversationFiles.length})
+                                    <div className="text-xs font-semibold text-muted-foreground mb-3 tracking-wider">
+                                        Contextual Files ({conversationFiles.length})
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {conversationFiles.map(file => (
@@ -765,7 +765,7 @@ function ChatContent() {
 
                                                                 return match ? (
                                                                     <div className="rounded-xl overflow-hidden my-4 border border-white/10">
-                                                                        <div className="bg-white/5 px-4 py-1.5 text-[10px] text-muted-foreground flex justify-between items-center font-bold tracking-widest uppercase">
+                                                                        <div className="bg-white/5 px-4 py-1.5 text-xs text-muted-foreground flex justify-between items-center font-bold tracking-wider uppercase">
                                                                             <span>{match[1]}</span>
                                                                         </div>
                                                                         <code className={`block bg-black/60 p-5 overflow-x-auto text-sm font-mono ${className}`} {...rest}>
@@ -787,7 +787,7 @@ function ChatContent() {
                                                     <div className="mt-5 mb-1 glass-card border-white/10 overflow-hidden bg-white/5">
                                                         <div className="bg-white/10 px-4 py-2 border-b border-white/5 flex items-center gap-2">
                                                             <FiBook className="w-3 h-3 text-white/60" />
-                                                            <span className="text-[10px] font-black text-white/60 uppercase tracking-widest">Design Recommendation</span>
+                                                            <span className="text-xs font-semibold text-white/80">Design Recommendation</span>
                                                         </div>
                                                         <div className="p-4">
                                                             <h4 className="text-white text-[15px] font-bold mb-2 tracking-tight">{message.decision_proposal.title}</h4>
@@ -796,14 +796,14 @@ function ChatContent() {
                                                                     setSuggestedDecision(message.decision_proposal || null);
                                                                     setIsDecisionsOpen(true);
                                                                 }}
-                                                                className="w-full mt-2 py-2 bg-primary text-black hover:bg-white/90 rounded-lg text-xs font-black transition-all duration-300 uppercase tracking-widest"
+                                                                className="w-full mt-3 py-2 bg-white/10 text-white border border-white/10 hover:bg-white/20 rounded-lg text-sm font-semibold transition-all duration-300"
                                                             >
                                                                 Review Recommendation
                                                             </button>
                                                         </div>
                                                     </div>
                                                 )}
-                                                <span className={`text-[10px] font-bold uppercase tracking-widest opacity-30 mt-3 block ${message.role === 'user' ? 'text-black' : 'text-white'}`}>
+                                                <span className={`text-xs font-semibold uppercase tracking-wider opacity-40 mt-3 block ${message.role === 'user' ? 'text-black/60' : 'text-white'}`}>
                                                     {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                 </span>
                                             </div>
@@ -834,7 +834,7 @@ function ChatContent() {
                                         <FiBook className="w-5 h-5 text-white" />
                                     </div>
                                     <div className="text-left">
-                                        <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">AI Suggestion</div>
+                                        <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">AI Suggestion</div>
                                         <div className="font-bold text-sm tracking-tight">Review "{suggestedDecision?.title}"</div>
                                     </div>
                                     <div className="bg-white/5 p-2 rounded-full ml-4 hover:bg-white/10 transition-colors" onClick={(e) => {
@@ -889,7 +889,7 @@ function ChatContent() {
                                                         style={{ width: `${progress === -1 ? 100 : progress}%` }}
                                                     />
                                                 </div>
-                                                <span className="text-[10px] text-muted-foreground font-bold">{progress === -1 ? 'ERROR' : `${progress}%`}</span>
+                                                <span className="text-xs text-muted-foreground font-semibold">{progress === -1 ? 'ERROR' : `${progress}%`}</span>
                                             </div>
                                         ))}
                                     </div>

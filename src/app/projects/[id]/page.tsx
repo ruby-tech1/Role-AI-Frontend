@@ -288,7 +288,7 @@ export default function ProjectDetailPage({
                 )}
 
                 {/* Breadcrumb */}
-                <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] mb-8 text-muted-foreground">
+                <div className="flex items-center gap-3 text-sm font-medium mb-8 text-muted-foreground">
                     <Link href="/projects" className="hover:text-white transition-colors duration-300">Registry</Link>
                     <span className="opacity-20">/</span>
                     <span className="text-white/40">{project.name}</span>
@@ -299,22 +299,22 @@ export default function ProjectDetailPage({
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-white/[0.04] transition-all duration-700" />
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-10">
                         <div className="space-y-3">
-                            <h1 className="text-4xl font-black text-white mb-2 tracking-tighter uppercase">{project.name}</h1>
+                            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">{project.name}</h1>
                             <p className="text-muted-foreground font-medium leading-relaxed max-w-2xl text-[15px]">{project.description || 'No specialized cluster description provided.'}</p>
                             <div className="flex items-center gap-4 pt-2">
                                 <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-lg border border-white/5">
                                     <FiClock className="w-3.5 h-3.5 text-white/40" />
-                                    <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Constructed {new Date(project.created_at).toLocaleDateString()}</span>
+                                    <span className="text-xs font-medium text-white/60">Constructed {new Date(project.created_at).toLocaleDateString()}</span>
                                 </div>
                             </div>
                         </div>
                         {isOwner && (
                             <div className="flex gap-3 shrink-0">
-                                <Link href={`/projects/${project.id}/edit`} className="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/5 text-xs font-black text-white rounded-xl transition-all duration-300 flex items-center gap-2 uppercase tracking-widest shadow-xl shadow-white/5">
+                                <Link href={`/projects/${project.id}/edit`} className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/10 text-sm font-semibold text-white rounded-xl transition-all duration-300 flex items-center gap-2">
                                     <FiSettings className="w-4 h-4 opacity-40" />
                                     Settings
                                 </Link>
-                                <button onClick={() => setDeleteConfirm(true)} className="px-5 py-2.5 bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-xs font-black text-destructive rounded-xl transition-all duration-300 flex items-center gap-2 uppercase tracking-widest">
+                                <button onClick={() => setDeleteConfirm(true)} className="px-4 py-2 bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-sm font-semibold text-destructive rounded-xl transition-all duration-300 flex items-center gap-2">
                                     <FiTrash2 className="w-4 h-4" />
                                     Terminate
                                 </button>
@@ -326,7 +326,7 @@ export default function ProjectDetailPage({
                 {/* Context */}
                 {project.context && (
                     <div className="glass-panel border-white/5 rounded-3xl p-8 mb-8">
-                        <h2 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-6">Project Context</h2>
+                        <h2 className="text-sm font-medium text-white/60 mb-6">Project Context</h2>
                         <p className="text-white/80 font-medium leading-relaxed whitespace-pre-wrap text-[15px]">{project.context}</p>
                     </div>
                 )}
@@ -339,7 +339,7 @@ export default function ProjectDetailPage({
                         </div>
                         <div>
                             <h3 className="text-xl font-bold text-white mb-1">AI Chat</h3>
-                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Ask questions/get AI insights</p>
+                            <p className="text-sm font-medium text-muted-foreground">Ask questions/get AI insights</p>
                         </div>
                     </Link>
                     <Link href="/projects" className="p-8 glass-card border-white/5 hover:border-white/20 rounded-3xl transition-all duration-500 group flex items-center gap-6">
@@ -348,7 +348,7 @@ export default function ProjectDetailPage({
                         </div>
                         <div>
                             <h3 className="text-xl font-bold text-white mb-1">Project Files</h3>
-                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Back to Projects</p>
+                            <p className="text-sm font-medium text-muted-foreground">Back to Projects</p>
                         </div>
                     </Link>
                 </div>
@@ -357,8 +357,8 @@ export default function ProjectDetailPage({
                 <div className="glass-panel border-white/5 rounded-3xl p-8 mb-8">
                     <div className="flex items-center justify-between mb-8">
                         <div>
-                            <h2 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Project Files</h2>
-                            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Attached Resources</p>
+                            <h2 className="text-sm font-medium text-white/60">Project Files</h2>
+                            <p className="text-xs font-medium text-muted-foreground mt-1">Attached Resources</p>
                         </div>
                         <div>
                             <input
@@ -370,9 +370,9 @@ export default function ProjectDetailPage({
                             <button
                                 onClick={() => fileInputRef.current?.click()}
                                 disabled={isUploading}
-                                className="px-6 py-2.5 bg-white/5 hover:bg-white hover:text-black border border-white/10 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 flex items-center gap-2 disabled:opacity-50"
+                                className="px-4 py-2 bg-white/10 text-white border border-white/10 hover:bg-white/20 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 disabled:opacity-50"
                             >
-                                {isUploading ? <FiRefreshCcw className="animate-spin w-3.5 h-3.5" /> : <FiUpload className="w-3.5 h-3.5" />}
+                                {isUploading ? <FiRefreshCcw className="animate-spin w-4 h-4" /> : <FiUpload className="w-4 h-4" />}
                                 Upload File
                             </button>
                         </div>
@@ -382,8 +382,8 @@ export default function ProjectDetailPage({
                     ) : files.length === 0 ? (
                         <div className="p-16 border border-dashed border-white/5 rounded-3xl bg-white/[0.01] text-center">
                             <FiFile className="w-10 h-10 text-white/10 mx-auto mb-4" />
-                            <p className="text-white/40 text-xs font-black uppercase tracking-widest">No Files Uploaded</p>
-                            <p className="text-[10px] text-muted-foreground/60 mt-2 uppercase tracking-tight">Any files uploaded to this project will appear here.</p>
+                            <p className="text-white text-base font-semibold">No Files Uploaded</p>
+                            <p className="text-sm text-muted-foreground mt-2">Any files uploaded to this project will appear here.</p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -395,12 +395,12 @@ export default function ProjectDetailPage({
                                     rel="noopener noreferrer"
                                     className="flex items-center gap-4 p-4 glass-card border-white/5 hover:border-white/20 rounded-2xl transition-all duration-500 group"
                                 >
-                                    <div className="w-12 h-12 bg-white/5 border border-white/5 rounded-xl flex items-center justify-center text-white/20 group-hover:bg-white group-hover:text-black transition-all duration-500">
+                                    <div className="w-12 h-12 bg-white/5 border border-white/5 rounded-xl flex items-center justify-center text-white/20 group-hover:bg-white/10 group-hover:text-white transition-all duration-500">
                                         <FiFile className="w-6 h-6" />
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-[13px] font-bold text-white truncate group-hover:translate-x-1 transition-transform duration-300">{file.filename}</p>
-                                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-1">
+                                        <p className="text-sm font-semibold text-white truncate group-hover:text-accent transition-colors duration-300">{file.filename}</p>
+                                        <p className="text-xs font-medium text-muted-foreground mt-1">
                                             {new Date(file.uploaded_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                         </p>
                                     </div>
@@ -426,12 +426,12 @@ export default function ProjectDetailPage({
                 <div className="glass-panel border-white/5 rounded-3xl p-8 mb-8">
                     <div className="flex items-center justify-between mb-8">
                         <div>
-                            <h2 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Design Decisions</h2>
-                            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">History</p>
+                            <h2 className="text-sm font-medium text-white/60">Design Decisions</h2>
+                            <p className="text-xs font-medium text-muted-foreground mt-1">History</p>
                         </div>
                         <button
                             onClick={() => setShowDecisionModal(true)}
-                            className="px-6 py-2.5 bg-white text-black hover:bg-white/90 font-black rounded-xl text-[10px] transition-all duration-300 flex items-center gap-2 uppercase tracking-widest active:scale-95 shadow-xl shadow-white/5"
+                            className="px-4 py-2 bg-white/10 text-white border border-white/10 hover:bg-white/20 font-semibold rounded-xl text-sm transition-all duration-300 flex items-center gap-2 active:scale-95"
                         >
                             <FiPlus className="w-4 h-4" />
                             Add Decision
@@ -442,8 +442,8 @@ export default function ProjectDetailPage({
                     ) : decisions.length === 0 ? (
                         <div className="p-16 border border-dashed border-white/5 rounded-3xl bg-white/[0.01] text-center">
                             <FiCheckCircle className="w-10 h-10 text-white/10 mx-auto mb-4" />
-                            <p className="text-white/40 text-xs font-black uppercase tracking-widest">No Decisions Recorded</p>
-                            <p className="text-[10px] text-muted-foreground/60 mt-2 uppercase tracking-tight">Design decisions will appear here once recorded.</p>
+                            <p className="text-white text-base font-semibold">No Decisions Recorded</p>
+                            <p className="text-sm text-muted-foreground mt-2">Design decisions will appear here once recorded.</p>
                         </div>
                     ) : (
                         <div className="space-y-4">
@@ -463,15 +463,15 @@ export default function ProjectDetailPage({
                                                             decision.status === 'superseded' ? 'bg-white/10' : 'bg-white/40'}
                                                 `} />
                                                 <div>
-                                                    <h3 className="text-white font-bold text-[15px] tracking-tight">{decision.title}</h3>
-                                                    <div className="flex items-center gap-4 text-[9px] font-black text-white/20 uppercase tracking-[0.2em] mt-1.5">
-                                                        <span className="flex items-center gap-1.5 group-hover:text-white/40 transition-colors">
+                                                    <h3 className="text-white font-bold text-base tracking-tight">{decision.title}</h3>
+                                                    <div className="flex items-center gap-4 text-xs font-medium text-white/40 mt-1.5">
+                                                        <span className="flex items-center gap-1.5 group-hover:text-white/60 transition-colors">
                                                             <FiClock className="w-3 h-3" />
                                                             {new Date(decision.created_at).toLocaleDateString()}
                                                         </span>
                                                         <span className="opacity-40">•</span>
                                                         <span>BY: {decision.created_by_name?.split(' ')[0] || 'Unknown'}</span>
-                                                        <span className={`px-2 py-0.5 rounded-md text-[8px] font-black tracking-widest border
+                                                        <span className={`px-2 py-0.5 rounded-md text-xs font-semibold border
                                                             ${decision.status === 'approved' ? 'bg-white text-black border-white' :
                                                                 decision.status === 'rejected' ? 'bg-destructive/10 text-destructive border-destructive/20' :
                                                                     decision.status === 'superseded' ? 'bg-white/5 text-muted-foreground border-white/10' : 'bg-white/10 text-white/60 border-white/10'}
@@ -515,7 +515,7 @@ export default function ProjectDetailPage({
                                                     <p className="whitespace-pre-wrap">{decision.content}</p>
                                                     {decision.rationale && (
                                                         <div className="mt-6 pt-6 border-t border-white/5">
-                                                            <strong className="text-[10px] font-black text-white/20 block mb-3 uppercase tracking-[0.2em]">Rationale</strong>
+                                                            <strong className="text-sm font-semibold text-white/60 block mb-3">Rationale</strong>
                                                             <p className="text-[13px] text-white/60">{decision.rationale}</p>
                                                         </div>
                                                     )}
@@ -533,11 +533,11 @@ export default function ProjectDetailPage({
                 <div className="glass-panel border-white/5 rounded-3xl p-8 mb-24">
                     <div className="flex items-center justify-between mb-8">
                         <div>
-                            <h2 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Project Members</h2>
-                            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Roles & Permissions</p>
+                            <h2 className="text-sm font-medium text-white/60 mb-1">Project Members</h2>
+                            <p className="text-xs font-medium text-muted-foreground mt-1">Roles & Permissions</p>
                         </div>
                         {isOwner && (
-                            <Link href={`/projects/${project.id}/members/add`} className="px-6 py-2.5 bg-white text-black hover:bg-white/90 font-black rounded-xl text-[10px] transition-all duration-300 flex items-center gap-2 uppercase tracking-widest shadow-xl shadow-white/5">
+                            <Link href={`/projects/${project.id}/members/add`} className="px-4 py-2 bg-white/10 text-white border border-white/10 hover:bg-white/20 font-semibold rounded-xl text-sm transition-all duration-300 flex items-center gap-2 active:scale-95">
                                 <FiPlus className="w-4 h-4" />
                                 Add Member
                             </Link>
@@ -545,7 +545,7 @@ export default function ProjectDetailPage({
                     </div>
 
                     {project.members.length === 0 ? (
-                        <div className="py-12 text-center text-white/20 italic text-xs font-bold uppercase tracking-widest">
+                        <div className="py-12 text-center text-white/40 text-sm font-medium">
                             No Members Added
                         </div>
                     ) : (
@@ -553,12 +553,12 @@ export default function ProjectDetailPage({
                             {project.members.map((member) => (
                                 <div key={member.id} className="flex items-center justify-between p-4 glass-card border-white/5 rounded-2xl group transition-all duration-300">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 bg-white/5 border border-white/5 rounded-xl flex items-center justify-center text-white/20 group-hover:bg-white group-hover:text-black transition-all duration-500">
+                                        <div className="w-12 h-12 bg-white/5 border border-white/5 rounded-xl flex items-center justify-center text-white/20 group-hover:bg-white/10 group-hover:text-white transition-all duration-500">
                                             <FiUser className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <p className="text-[14px] font-bold text-white tracking-tight">{member.user_full_name || 'Anonymous'}</p>
-                                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{member.user_email}</p>
+                                            <p className="text-sm font-semibold text-white tracking-tight">{member.user_full_name || 'Anonymous'}</p>
+                                            <p className="text-xs font-medium text-muted-foreground mt-0.5">{member.user_email}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
@@ -567,19 +567,19 @@ export default function ProjectDetailPage({
                                                 <select
                                                     value={editRole}
                                                     onChange={(e) => setEditRole(e.target.value as Role)}
-                                                    className="px-3 py-1.5 bg-black border border-white/10 rounded-lg text-[10px] font-black text-white uppercase tracking-widest outline-none focus:ring-1 focus:ring-white/20"
+                                                    className="px-3 py-1.5 bg-black border border-white/10 rounded-lg text-sm font-medium text-white outline-none focus:ring-1 focus:ring-white/20 appearance-none"
                                                 >
                                                     {Object.entries(ROLE_LABELS).map(([value, label]) => (
-                                                        <option key={value} value={value} className="bg-black">{label.toUpperCase()}</option>
+                                                        <option key={value} value={value} className="bg-black">{label}</option>
                                                     ))}
                                                 </select>
-                                                <button onClick={() => handleUpdateRole(member.user_id)} className="px-3 py-1.5 bg-white text-black text-[10px] font-black rounded-lg hover:bg-white/90 transition-all">SAVE</button>
-                                                <button onClick={() => setEditingMember(null)} className="px-3 py-1.5 bg-white/5 text-white/60 text-[10px] font-black rounded-lg hover:bg-white/10 transition-all">EXIT</button>
+                                                <button onClick={() => handleUpdateRole(member.user_id)} className="px-3 py-1.5 bg-white/10 text-white border border-white/10 rounded-lg text-xs font-semibold hover:bg-white/20 transition-all">SAVE</button>
+                                                <button onClick={() => setEditingMember(null)} className="px-3 py-1.5 bg-white/5 text-white/60 border border-white/5 rounded-lg text-xs font-medium hover:bg-white/10 transition-all">EXIT</button>
                                             </div>
                                         ) : (
                                             <div className="flex items-center gap-4">
-                                                <span className="px-3 py-1 bg-white/5 border border-white/5 text-[9px] font-black text-white/60 rounded-lg uppercase tracking-widest group-hover:bg-white group-hover:text-black transition-all duration-500">
-                                                    {ROLE_LABELS[member.role as Role].toUpperCase()}
+                                                <span className="px-3 py-1 bg-white/5 border border-white/5 text-xs font-medium text-white/60 rounded-lg group-hover:bg-white/10 group-hover:text-white transition-all duration-500">
+                                                    {ROLE_LABELS[member.role as Role]}
                                                 </span>
                                                 {isOwner && (
                                                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -643,47 +643,47 @@ export default function ProjectDetailPage({
                     <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-50 animate-in fade-in duration-300">
                         <div className="glass-panel border-white/5 rounded-3xl p-8 max-w-lg w-full mx-4 shadow-2xl animate-in zoom-in duration-300">
                             <div className="mb-8">
-                                <h3 className="text-2xl font-black text-white uppercase tracking-tight">Add Decision</h3>
-                                <p className="text-[10px] font-black text-muted-foreground uppercase opacity-40 tracking-[0.2em] mt-1">Add a new design decision to the project history.</p>
+                                <h3 className="text-2xl font-bold text-white tracking-tight">Add Decision</h3>
+                                <p className="text-sm font-medium text-muted-foreground opacity-80 mt-1">Add a new design decision to the project history.</p>
                             </div>
                             <form onSubmit={handleCreateDecision} className="space-y-6">
                                 <div className="space-y-4">
                                     <div className="space-y-1.5">
-                                        <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Title</label>
+                                        <label className="block text-sm font-medium text-gray-200 mb-2">Title</label>
                                         <input
                                             type="text"
                                             value={newDecision.title}
                                             onChange={e => setNewDecision({ ...newDecision, title: e.target.value })}
-                                            className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium placeholder:text-white/5"
+                                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition"
                                             placeholder="System Component / Objective"
                                             required
                                         />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Decision Details</label>
+                                        <label className="block text-sm font-medium text-gray-200 mb-2">Decision Details</label>
                                         <textarea
                                             value={newDecision.content}
                                             onChange={e => setNewDecision({ ...newDecision, content: e.target.value })}
-                                            className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium placeholder:text-white/5 h-32 resize-none"
+                                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition h-32 resize-none"
                                             placeholder="Define the primary decision parameters..."
                                             required
                                         />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Rationale</label>
+                                        <label className="block text-sm font-medium text-gray-200 mb-2">Rationale</label>
                                         <textarea
                                             value={newDecision.rationale}
                                             onChange={e => setNewDecision({ ...newDecision, rationale: e.target.value })}
-                                            className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium placeholder:text-white/5 h-24 resize-none"
+                                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition h-24 resize-none"
                                             placeholder="Engineering tradeoffs and justification..."
                                         />
                                     </div>
                                 </div>
                                 <div className="flex gap-4 pt-4">
-                                    <button type="button" onClick={() => setShowDecisionModal(false)} className="flex-1 px-6 py-4 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black rounded-2xl transition-all uppercase tracking-widest">
-                                        Abort
+                                    <button type="button" onClick={() => setShowDecisionModal(false)} className="flex-1 px-6 py-4 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold rounded-xl transition-all">
+                                        Cancel
                                     </button>
-                                    <button type="submit" disabled={isCreatingDecision} className="flex-1 px-6 py-4 bg-white text-black hover:bg-white/90 font-black rounded-2xl transition-all duration-300 disabled:opacity-50 uppercase text-[10px] tracking-widest shadow-2xl shadow-white/5">
+                                    <button type="submit" disabled={isCreatingDecision} className="flex-1 px-6 py-4 bg-white/10 text-white border border-white/10 hover:bg-white/20 font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 text-sm tracking-wide active:scale-95 shadow-2xl shadow-white/5">
                                         {isCreatingDecision ? 'SAVING...' : 'ADD DECISION'}
                                     </button>
                                 </div>
@@ -698,44 +698,44 @@ export default function ProjectDetailPage({
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
                     <div className="glass-panel border-white/5 rounded-3xl p-8 max-w-lg w-full shadow-2xl animate-in zoom-in duration-300">
                         <div className="mb-8">
-                            <h3 className="text-2xl font-black text-white uppercase tracking-tight">Edit Decision</h3>
-                            <p className="text-[10px] font-black text-muted-foreground uppercase opacity-40 tracking-[0.2em] mt-1">Refining Architectural Context</p>
+                            <h3 className="text-2xl font-bold text-white tracking-tight">Edit Decision</h3>
+                            <p className="text-sm font-medium text-muted-foreground opacity-80 mt-1">Refining Architectural Context</p>
                         </div>
                         <form onSubmit={handleUpdateDecision} className="space-y-6">
                             <div className="space-y-4">
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Title</label>
+                                    <label className="block text-sm font-medium text-gray-200 mb-2">Title</label>
                                     <input
                                         type="text"
                                         value={editForm.title}
                                         onChange={e => setEditForm({ ...editForm, title: e.target.value })}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium"
+                                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition"
                                         required
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Specification</label>
+                                    <label className="block text-sm font-medium text-gray-200 mb-2">Specification</label>
                                     <textarea
                                         value={editForm.content}
                                         onChange={e => setEditForm({ ...editForm, content: e.target.value })}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium h-32 resize-none"
+                                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition h-32 resize-none"
                                         required
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Rationale</label>
+                                    <label className="block text-sm font-medium text-gray-200 mb-2">Rationale</label>
                                     <textarea
                                         value={editForm.rationale}
                                         onChange={e => setEditForm({ ...editForm, rationale: e.target.value })}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/10 transition-all font-medium h-24 resize-none"
+                                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition h-24 resize-none"
                                     />
                                 </div>
                             </div>
                             <div className="flex gap-4 pt-4">
-                                <button type="button" onClick={() => setEditingDecision(null)} className="flex-1 px-6 py-4 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black rounded-2xl transition-all uppercase tracking-widest">
+                                <button type="button" onClick={() => setEditingDecision(null)} className="flex-1 px-6 py-4 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold rounded-xl transition-all">
                                     Cancel
                                 </button>
-                                <button type="submit" disabled={isUpdatingDecision} className="flex-1 px-6 py-4 bg-white text-black hover:bg-white/90 font-black rounded-2xl transition-all duration-300 disabled:opacity-50 uppercase text-[10px] tracking-widest shadow-xl shadow-white/5">
+                                <button type="submit" disabled={isUpdatingDecision} className="flex-1 px-6 py-4 bg-white/10 text-white border border-white/10 hover:bg-white/20 font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 text-sm tracking-wide active:scale-95 shadow-xl shadow-white/5">
                                     {isUpdatingDecision ? 'SYNCING...' : 'COMMIT CHANGES'}
                                 </button>
                             </div>

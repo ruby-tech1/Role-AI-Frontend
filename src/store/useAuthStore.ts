@@ -16,6 +16,7 @@ interface AuthState {
     logout: () => Promise<void>;
     setTokens: (accessToken: string, refreshToken: string) => void;
     clearError: () => void;
+    updateUser: (userData: Partial<User>) => void;
     _hasHydrated: boolean;
     setHasHydrated: (state: boolean) => void;
 }
@@ -101,6 +102,7 @@ export const useAuthStore = create<AuthState>()(
             },
 
             clearError: () => set({ error: null }),
+            updateUser: (userData) => set((state) => ({ user: state.user ? { ...state.user, ...userData } : null })),
         }),
         {
             name: 'auth-storage', // name of the item in the storage (must be unique)

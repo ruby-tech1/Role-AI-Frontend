@@ -69,14 +69,14 @@ export default function LoginPage() {
                         <div className="w-16 h-16 bg-white text-black rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-white/20 transform -rotate-6 group-hover:rotate-0 transition-transform duration-500">
                             <span className="font-black text-2xl tracking-tighter">AI</span>
                         </div>
-                        <h1 className="text-2xl font-black text-white mb-2 tracking-tighter uppercase">Login</h1>
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.4em] opacity-40">Sign in to your account</p>
+                        <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Login</h1>
+                        <p className="text-sm font-medium text-muted-foreground opacity-80">Sign in to your account</p>
                     </div>
 
                     {/* Error Message */}
                     {displayError && (
                         <div className="mb-8 p-5 bg-destructive/10 border border-destructive/20 rounded-2xl animate-in shake duration-500">
-                            <p className="text-destructive text-[10px] font-black uppercase tracking-widest text-center leading-relaxed">{displayError}</p>
+                            <p className="text-destructive text-sm font-semibold text-center leading-relaxed">{displayError}</p>
                         </div>
                     )}
 
@@ -92,7 +92,7 @@ export default function LoginPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition"
                                 placeholder="you@example.com"
                             />
                         </div>
@@ -114,13 +114,13 @@ export default function LoginPage() {
                                 <input
                                     id="remember"
                                     type="checkbox"
-                                    className="w-5 h-5 rounded-lg border-white/10 bg-black text-white focus:ring-white/20 transition-all appearance-none border checked:bg-white relative after:content-['✓'] after:absolute after:inset-0 after:flex after:items-center after:justify-center after:text-black after:text-[12px] after:font-black after:opacity-0 checked:after:opacity-100"
+                                    className="w-5 h-5 rounded-md border-white/10 bg-black text-white focus:ring-white/30 transition-all appearance-none border checked:bg-white relative after:content-['✓'] after:absolute after:inset-0 after:flex after:items-center after:justify-center after:text-black after:text-sm after:font-bold after:opacity-0 checked:after:opacity-100"
                                 />
-                                <label htmlFor="remember" className="text-[10px] font-black text-muted-foreground uppercase tracking-widest cursor-pointer group-hover/check:text-white transition-colors">
+                                <label htmlFor="remember" className="text-sm font-medium text-muted-foreground cursor-pointer group-hover/check:text-white transition-colors">
                                     Remember Me
                                 </label>
                             </div>
-                            <Link href="/forgot-password" className="text-[10px] font-black text-white/40 hover:text-white uppercase tracking-widest transition-colors">
+                            <Link href="/forgot-password" className="text-sm font-medium text-white/60 hover:text-white transition-colors">
                                 Forgot password?
                             </Link>
                         </div>
@@ -128,7 +128,7 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-5 px-6 bg-white text-black font-black rounded-2xl shadow-2xl shadow-white/5 hover:bg-white/90 transition-all duration-500 disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] active:scale-95"
+                            className="w-full py-4 px-6 bg-white/10 text-white border border-white/10 font-semibold rounded-xl shadow-2xl shadow-white/5 hover:bg-white/20 transition-all duration-300 disabled:opacity-50 text-sm tracking-wide active:scale-95"
                         >
                             {isLoading ? (
                                 <span className="flex items-center justify-center gap-3">
@@ -144,7 +144,7 @@ export default function LoginPage() {
                     {/* Divider */}
                     <div className="mt-12 flex items-center px-4">
                         <div className="flex-1 border-t border-white/5"></div>
-                        <span className="px-6 text-[9px] font-black text-white/20 uppercase tracking-[0.3em]">Or sign in with</span>
+                        <span className="px-4 text-xs font-medium text-white/40 uppercase tracking-wider">Or sign in with</span>
                         <div className="flex-1 border-t border-white/5"></div>
                     </div>
 
@@ -153,7 +153,7 @@ export default function LoginPage() {
                         type="button"
                         onClick={() => googleLogin()}
                         disabled={googleLoading}
-                        className="mt-8 w-full py-4 px-6 bg-white/5 hover:bg-white/10 border border-white/5 text-white font-black rounded-2xl flex items-center justify-center gap-4 transition-all duration-500 disabled:opacity-50 uppercase text-[10px] tracking-widest"
+                        className="mt-6 w-full py-3 px-6 bg-white/5 hover:bg-white/10 border border-white/5 text-white font-medium rounded-xl flex items-center justify-center gap-3 transition-all duration-300 disabled:opacity-50 text-sm"
                     >
                         {googleLoading ? (
                             <FiRefreshCcw className="animate-spin h-4 w-4" />
@@ -164,9 +164,9 @@ export default function LoginPage() {
                     </button>
 
                     {/* Register Link */}
-                    <p className="mt-12 text-center text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">
+                    <p className="mt-10 text-center text-sm font-medium text-muted-foreground opacity-80">
                         New here?{' '}
-                        <Link href="/register" className="text-white hover:underline transition-all">
+                        <Link href="/register" className="text-white hover:text-accent transition-all">
                             Sign Up
                         </Link>
                     </p>
