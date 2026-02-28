@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import mermaid from 'mermaid';
 import { FiMaximize2, FiMinimize2, FiZoomIn, FiZoomOut, FiDownload, FiX } from 'react-icons/fi';
 
@@ -174,9 +175,9 @@ export default function MermaidRenderer({ chart }: MermaidRendererProps) {
         </div>
     );
 
-    if (isFullscreen) {
-        return (
-            <div className="fixed inset-0 z-50 bg-slate-900/95 flex flex-col">
+    if (isFullscreen && typeof document !== 'undefined') {
+        return createPortal(
+            <div className="fixed inset-0 z-[9999] bg-slate-900/95 flex flex-col">
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
                     <span className="text-sm text-gray-400">Diagram Viewer</span>
                     <div className="flex items-center gap-4">
@@ -192,7 +193,8 @@ export default function MermaidRenderer({ chart }: MermaidRendererProps) {
                 <div className="flex-1 overflow-auto p-8" ref={ref}>
                     {diagramContent}
                 </div>
-            </div>
+            </div>,
+            document.body
         );
     }
 
