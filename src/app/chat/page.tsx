@@ -13,6 +13,7 @@ import remarkGfm from 'remark-gfm';
 import FileUploader from '@/components/chat/FileUploader';
 import FileList from '@/components/chat/FileList';
 import MermaidRenderer from '@/components/artifacts/MermaidRenderer';
+import PlantUMLRenderer from '@/components/artifacts/PlantUMLRenderer';
 import { Spinner, PageLoader, LoadingDots, LoadingText } from '@/components/common/Loading';
 import { FiPlus, FiLogOut, FiMenu, FiX, FiChevronDown, FiAlertCircle } from 'react-icons/fi';
 import { BsChatDots } from 'react-icons/bs';
@@ -758,9 +759,14 @@ function ChatContent() {
                                                                 const { children, className, node, ...rest } = props;
                                                                 const match = /language-(\w+)/.exec(className || '');
                                                                 const isMermaid = match && match[1] === 'mermaid';
+                                                                const isPlantUML = match && match[1] === 'plantuml';
 
                                                                 if (isMermaid) {
                                                                     return <MermaidRenderer chart={String(children).replace(/\n$/, '')} />;
+                                                                }
+
+                                                                if (isPlantUML) {
+                                                                    return <PlantUMLRenderer chart={String(children).replace(/\n$/, '')} />;
                                                                 }
 
                                                                 return match ? (
