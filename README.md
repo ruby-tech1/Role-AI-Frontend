@@ -15,7 +15,7 @@ The frontend for the Role-Aware AI Assistant, providing a streamlined and respon
 
 ## Key Features
 
-- **Strategic Dashboard**: Overview of engineering projects and design status.
+- **Strategic Dashboard**: Overview of all engineering projects and design status.
 - **Perspective-Driven Chat**: Real-time collaboration with AI agents specialized in requirements, design, and analysis.
 - **Visual Design Rendering**: Live rendering of engineering models (Flowcharts, UML, ERD) to facilitate architectural discussions.
 - **Architectural Decision Tracking**: Integrated tools to log and review high-level system design choices.
