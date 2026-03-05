@@ -60,7 +60,7 @@ The application will be available at `http://localhost:3000`.
 
 ## Building for Production
 
-To create an optimized production build:
+To create an optimized production build::
 ```bash
 npm run build
 npm run start
