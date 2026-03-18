@@ -13,11 +13,11 @@ export default function Header() {
                     <Link href="/dashboard" className="text-xl font-bold text-white hover:text-white/80 transition tracking-tight">
                         AI Project Manager
                     </Link>
-                    <div className="flex items-center gap-4">
-                        <span className="text-muted-foreground text-sm font-medium">{user?.full_name}</span>
+                    <div className="flex items-center gap-2 sm:gap-4">
+                        <span className="hidden sm:inline text-muted-foreground text-sm font-medium">{user?.full_name}</span>
                         <button
                             onClick={logout}
-                            className="px-4 py-2 text-sm text-foreground/70 hover:text-white hover:bg-white/5 border border-white/5 hover:border-white/10 rounded-lg transition-all duration-300"
+                            className="px-3 sm:px-4 py-2 text-sm text-foreground/70 hover:text-white hover:bg-white/5 border border-white/5 hover:border-white/10 rounded-lg transition-all duration-300"
                         >
                             Logout
                         </button>

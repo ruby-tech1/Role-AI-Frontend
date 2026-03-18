@@ -190,15 +190,20 @@ export default function DecisionSidebar({ projectId, initialProposal, onClearPro
     };
 
     return (
-        <div
-            style={{ width: sidebarWidth, gridTemplateRows: 'auto auto auto minmax(0, 1fr)' }}
-            className={`grid h-full glass-panel border-l border-white/5 shrink-0 relative ${isResizing ? '' : 'transition-all duration-300'}`}
-        >
-            {/* Custom Left Border Resizer */}
+        <>
+            {/* Mobile backdrop */}
+            <div className="md:hidden mobile-overlay-backdrop" onClick={() => {/* parent controls visibility */}} />
             <div
-                className="absolute left-0 top-0 bottom-0 w-[5px] cursor-col-resize hover:bg-white/20 transition-colors z-50"
-                onMouseDown={() => setIsResizing(true)}
-            />
+                style={{ width: typeof window !== 'undefined' && window.innerWidth < 768 ? '100%' : sidebarWidth, gridTemplateRows: 'auto auto auto minmax(0, 1fr)' }}
+                className={`grid h-full glass-panel border-l border-white/5 shrink-0 relative
+                    md:static fixed inset-0 z-50 md:z-auto
+                    ${isResizing ? '' : 'transition-all duration-300'}`}
+            >
+                {/* Custom Left Border Resizer — desktop only */}
+                <div
+                    className="hidden md:block absolute left-0 top-0 bottom-0 w-[5px] cursor-col-resize hover:bg-white/20 transition-colors z-50"
+                    onMouseDown={() => setIsResizing(true)}
+                />
 
             <div className="p-4 border-b border-white/5 flex items-center justify-between shrink-0 bg-black/20 relative z-10">
                 <h2 className="text-sm font-black text-white uppercase tracking-widest">History</h2>
@@ -358,5 +363,6 @@ export default function DecisionSidebar({ projectId, initialProposal, onClearPro
                 )}
             </div>
         </div>
+        </>
     );
 }

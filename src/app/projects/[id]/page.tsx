@@ -295,7 +295,7 @@ export default function ProjectDetailPage({
                 </div>
 
                 {/* Project Header */}
-                <div className="glass-panel border-white/5 rounded-3xl p-8 mb-8 relative overflow-hidden group">
+                <div className="glass-panel border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-8 mb-8 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-white/[0.04] transition-all duration-700" />
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-10">
                         <div className="space-y-3">
@@ -354,7 +354,7 @@ export default function ProjectDetailPage({
                 </div>
 
                 {/* Project Files */}
-                <div className="glass-panel border-white/5 rounded-3xl p-8 mb-8">
+                <div className="glass-panel border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-8 mb-8">
                     <div className="flex items-center justify-between mb-8">
                         <div>
                             <h2 className="text-sm font-medium text-white/60">Project Files</h2>
@@ -423,7 +423,7 @@ export default function ProjectDetailPage({
                 </div>
 
                 {/* Design Decisions */}
-                <div className="glass-panel border-white/5 rounded-3xl p-8 mb-8">
+                <div className="glass-panel border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-8 mb-8">
                     <div className="flex items-center justify-between mb-8">
                         <div>
                             <h2 className="text-sm font-medium text-white/60">Design Decisions</h2>
@@ -530,7 +530,7 @@ export default function ProjectDetailPage({
                 </div>
 
                 {/* Members */}
-                <div className="glass-panel border-white/5 rounded-3xl p-8 mb-24">
+                <div className="glass-panel border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-8 mb-24">
                     <div className="flex items-center justify-between mb-8">
                         <div>
                             <h2 className="text-sm font-medium text-white/60 mb-1">Project Members</h2>
@@ -551,7 +551,7 @@ export default function ProjectDetailPage({
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {project.members.map((member) => (
-                                <div key={member.id} className="flex items-center justify-between p-4 glass-card border-white/5 rounded-2xl group transition-all duration-300">
+                                <div key={member.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 glass-card border-white/5 rounded-2xl group transition-all duration-300 gap-3">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 bg-white/5 border border-white/5 rounded-xl flex items-center justify-center text-white/20 group-hover:bg-white/10 group-hover:text-white transition-all duration-500">
                                             <FiUser className="w-6 h-6" />

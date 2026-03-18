@@ -112,12 +112,12 @@ export default function ProfilePage() {
             {/* Main Content */}
             <main className="max-w-3xl mx-auto px-6 py-12 pt-32">
                 <div className="mb-16">
-                    <h1 className="text-5xl font-black text-white tracking-tighter uppercase mb-2">My Profile</h1>
+                    <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tighter uppercase mb-2">My Profile</h1>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.4em] opacity-40">Update your personal information and password</p>
                 </div>
 
                 {/* Profile Update Form */}
-                <div className="glass-panel border-white/5 rounded-[2.5rem] p-12 mb-12 relative overflow-hidden group">
+                <div className="glass-panel border-white/5 rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-12 mb-12 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-96 h-96 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50" />
 
                     <div className="flex items-center gap-4 mb-12 relative z-10">
@@ -183,7 +183,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Password Change Form */}
-                <div className="glass-panel border-white/5 rounded-[2.5rem] p-12 mb-24 relative overflow-hidden group">
+                <div className="glass-panel border-white/5 rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-12 mb-24 relative overflow-hidden group">
                     <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/[0.01] rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl opacity-50" />
 
                     <div className="flex items-center gap-4 mb-12 relative z-10">

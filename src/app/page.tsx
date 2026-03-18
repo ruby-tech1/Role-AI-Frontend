@@ -18,8 +18,8 @@ export default function Home() {
 
       {/* Animated Blobs for "live" feel */}
       <div className="absolute top-0 -left-64 h-96 w-96 animate-blob rounded-full bg-blue-500/10 mix-blend-multiply blur-3xl filter dark:bg-blue-500/20 dark:mix-blend-screen" />
-      <div className="animation-delay-2000 absolute top-0 -right-64 h-96 w-96 animate-blob rounded-full bg-purple-500/10 mix-blend-multiply blur-3xl filter dark:bg-purple-500/20 dark:mix-blend-screen" />
-      <div className="animation-delay-4000 absolute -bottom-64 left-64 h-96 w-96 animate-blob rounded-full bg-emerald-500/10 mix-blend-multiply blur-3xl filter dark:bg-emerald-500/20 dark:mix-blend-screen" />
+      <div className="animation-delay-2000 absolute top-0 -right-64 h-96 w-96 animate-blob rounded-full bg-sky-500/10 mix-blend-multiply blur-3xl filter dark:bg-sky-500/20 dark:mix-blend-screen" />
+      <div className="animation-delay-4000 absolute -bottom-64 left-64 h-96 w-96 animate-blob rounded-full bg-indigo-500/10 mix-blend-multiply blur-3xl filter dark:bg-indigo-500/20 dark:mix-blend-screen" />
 
       {/* Header */}
       <header className="opacity-0 animate-fade-in sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-white/5 bg-background/60 px-6 backdrop-blur-md md:px-12">
@@ -53,7 +53,7 @@ export default function Home() {
           </div>
           <h1 className="opacity-0 animate-fade-in-up animation-delay-100 font-sans text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             Your AI Assistant, <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               Tailored to Your Role.
             </span>
           </h1>

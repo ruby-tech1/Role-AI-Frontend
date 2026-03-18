@@ -34,8 +34,8 @@ export default function DashboardPage() {
             {/* Main Content */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
                 {/* Welcome Card */}
-                <div className="glass-card p-10 mb-8 border-white/5 rounded-2xl">
-                    <h2 className="text-4xl font-bold text-white mb-3 tracking-tight">
+                <div className="glass-card p-6 sm:p-10 mb-8 border-white/5 rounded-2xl">
+                    <h2 className="text-2xl sm:text-4xl font-bold text-white mb-3 tracking-tight">
                         Welcome back, {user?.full_name?.split(' ')[0]}! 👋
                     </h2>
                     <p className="text-muted-foreground text-lg font-medium">

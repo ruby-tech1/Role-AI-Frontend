@@ -70,12 +70,12 @@ export default function NewProjectPage() {
                         <FiChevronLeft className="w-6 h-6" />
                     </Link>
                     <div>
-                        <h1 className="text-4xl font-black text-white tracking-tighter uppercase">Create Project</h1>
+                        <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tighter uppercase">Create Project</h1>
                         <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.3em] mt-1">Enter project details</p>
                     </div>
                 </div>
 
-                <div className="glass-panel border-white/5 rounded-3xl p-10 mb-24 relative overflow-hidden group">
+                <div className="glass-panel border-white/5 rounded-2xl sm:rounded-3xl p-6 sm:p-10 mb-24 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-white/[0.04] transition-all duration-700" />
 
                     {error && (

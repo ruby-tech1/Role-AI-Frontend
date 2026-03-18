@@ -52,8 +52,8 @@ export default function ProjectsPage() {
             <Header />
 
             {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-6 py-12 pt-28">
-                <div className="flex items-center justify-between mb-12">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 pt-24 sm:pt-28">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 sm:mb-12">
                     <div className="space-y-1">
                         <h1 className="text-3xl font-bold text-white tracking-tight">Projects</h1>
                         <p className="text-sm font-medium text-muted-foreground">Manage your projects</p>

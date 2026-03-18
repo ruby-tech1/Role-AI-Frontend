@@ -63,9 +63,9 @@ export default function LoginPage() {
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/[0.01] rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
 
             <div className="w-full max-w-md relative z-10">
-                <div className="glass-panel border-white/5 rounded-[2.5rem] p-12 shadow-2xl overflow-hidden group">
+                <div className="glass-panel border-white/5 rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-12 shadow-2xl overflow-hidden group">
                     {/* Header */}
-                    <div className="text-center mb-12">
+                    <div className="text-center mb-8 sm:mb-12">
                         <div className="w-16 h-16 bg-white text-black rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-white/20 transform -rotate-6 group-hover:rotate-0 transition-transform duration-500">
                             <span className="font-black text-2xl tracking-tighter">AI</span>
                         </div>

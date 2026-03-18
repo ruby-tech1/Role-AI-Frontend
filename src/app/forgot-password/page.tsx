@@ -33,9 +33,9 @@ export default function ForgotPasswordPage() {
             <div className="absolute top-1/2 left-1/2 w-full h-full bg-white/[0.01] rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl animate-pulse" />
 
             <div className="w-full max-w-md relative z-10">
-                <div className="glass-panel border-white/5 rounded-[2.5rem] p-12 shadow-2xl overflow-hidden group">
+                <div className="glass-panel border-white/5 rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-12 shadow-2xl overflow-hidden group">
                     {/* Header */}
-                    <div className="text-center mb-12">
+                    <div className="text-center mb-8 sm:mb-12">
                         <div className="w-16 h-16 bg-white/5 border border-white/10 text-white rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl transform group-hover:scale-110 transition-transform duration-500">
                             <FiRefreshCcw className={`w-8 h-8 ${isLoading ? 'animate-spin' : ''}`} />
                         </div>
