@@ -459,10 +459,6 @@ function ChatContent() {
     };
 
     const triggerFileUpload = () => {
-        if (!currentProjectId && !selectedChatId) {
-            alert("Please select a project or start a chat to upload files.");
-            return;
-        }
         fileInputRef.current?.click();
     };
 
@@ -927,14 +923,8 @@ function ChatContent() {
                                     <button
                                         type="button"
                                         onClick={triggerFileUpload}
-                                        disabled={!currentProjectId && !selectedChatId}
-                                        className={`p-3.5 rounded-2xl border transition-all duration-300 flex-shrink-0
-                                            ${(!currentProjectId && !selectedChatId)
-                                                ? 'bg-white/5 border-white/5 text-muted-foreground/30 cursor-not-allowed'
-                                                : 'bg-white/5 border-white/5 text-muted-foreground hover:text-white hover:bg-white/10 hover:border-white/20'
-                                            }
-                                        `}
-                                        title={(!currentProjectId && !selectedChatId) ? "Select a project or start a chat to upload files" : "Attach file"}
+                                        className="p-3.5 rounded-2xl border transition-all duration-300 flex-shrink-0 bg-white/5 border-white/5 text-muted-foreground hover:text-white hover:bg-white/10 hover:border-white/20"
+                                        title="Attach file"
                                     >
                                         <FaPaperclip className="w-5 h-5 font-light" />
                                     </button>
