@@ -93,25 +93,46 @@ export default function PlantUMLRenderer({ chart }: PlantUMLRendererProps) {
                 a.click();
                 URL.revokeObjectURL(url);
             } else {
+                const scale = 2;
                 const parser = new DOMParser();
                 const svgDoc = parser.parseFromString(svg, 'image/svg+xml');
                 const svgElement = svgDoc.documentElement;
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const img = new Image();
 
-                const svgWidth = parseInt(svgElement.getAttribute('width') || '800');
-                const svgHeight = parseInt(svgElement.getAttribute('height') || '600');
+                // Extract true dimensions from viewBox first, then width/height attributes
+                let svgWidth = 800;
+                let svgHeight = 600;
+                const viewBox = svgElement.getAttribute('viewBox');
+                if (viewBox) {
+                    const parts = viewBox.split(/[\s,]+/).map(Number);
+                    if (parts.length === 4 && !parts.some(isNaN)) {
+                        svgWidth = parts[2];
+                        svgHeight = parts[3];
+                    }
+                } else {
+                    const w = parseFloat(svgElement.getAttribute('width') || '');
+                    const h = parseFloat(svgElement.getAttribute('height') || '');
+                    if (!isNaN(w) && w > 0) svgWidth = w;
+                    if (!isNaN(h) && h > 0) svgHeight = h;
+                }
 
-                canvas.width = svgWidth * 2;
-                canvas.height = svgHeight * 2;
+                // Set explicit pixel dimensions on the SVG so the browser renders it at the right size
+                svgElement.setAttribute('width', String(svgWidth));
+                svgElement.setAttribute('height', String(svgHeight));
+                if (!viewBox) {
+                    svgElement.setAttribute('viewBox', `0 0 ${svgWidth} ${svgHeight}`);
+                }
 
-                // Serialize the SVG and convert to a base64 data URL to avoid canvas taint
                 const serializer = new XMLSerializer();
                 const svgString = serializer.serializeToString(svgElement);
                 const base64 = btoa(unescape(encodeURIComponent(svgString)));
                 const dataUrl = `data:image/svg+xml;base64,${base64}`;
 
+                const canvas = document.createElement('canvas');
+                canvas.width = svgWidth * scale;
+                canvas.height = svgHeight * scale;
+                const ctx = canvas.getContext('2d');
+
+                const img = new Image();
                 img.onload = () => {
                     if (ctx) {
                         ctx.fillStyle = '#1e293b';
