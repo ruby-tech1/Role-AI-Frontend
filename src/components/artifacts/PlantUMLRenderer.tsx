@@ -93,7 +93,9 @@ export default function PlantUMLRenderer({ chart }: PlantUMLRendererProps) {
                 a.click();
                 URL.revokeObjectURL(url);
             } else {
-                const svgElement = new DOMParser().parseFromString(svg, 'image/svg+xml').documentElement;
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svg, 'image/svg+xml');
+                const svgElement = svgDoc.documentElement;
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 const img = new Image();
@@ -104,28 +106,39 @@ export default function PlantUMLRenderer({ chart }: PlantUMLRendererProps) {
                 canvas.width = svgWidth * 2;
                 canvas.height = svgHeight * 2;
 
-                const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
-                const blobUrl = URL.createObjectURL(svgBlob);
+                // Serialize the SVG and convert to a base64 data URL to avoid canvas taint
+                const serializer = new XMLSerializer();
+                const svgString = serializer.serializeToString(svgElement);
+                const base64 = btoa(unescape(encodeURIComponent(svgString)));
+                const dataUrl = `data:image/svg+xml;base64,${base64}`;
 
                 img.onload = () => {
                     if (ctx) {
                         ctx.fillStyle = '#1e293b';
                         ctx.fillRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        canvas.toBlob((blob) => {
-                            if (blob) {
-                                const pngUrl = URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.href = pngUrl;
-                                a.download = 'diagram.png';
-                                a.click();
-                                URL.revokeObjectURL(pngUrl);
-                            }
-                        }, 'image/png');
+                        try {
+                            canvas.toBlob((blob) => {
+                                if (blob) {
+                                    const pngUrl = URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.href = pngUrl;
+                                    a.download = 'diagram.png';
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    document.body.removeChild(a);
+                                    URL.revokeObjectURL(pngUrl);
+                                }
+                            }, 'image/png');
+                        } catch (e) {
+                            console.error('PNG export failed (canvas tainted):', e);
+                        }
                     }
-                    URL.revokeObjectURL(blobUrl);
                 };
-                img.src = blobUrl;
+                img.onerror = () => {
+                    console.error('Failed to load SVG for PNG export');
+                };
+                img.src = dataUrl;
             }
         },
         [svg]
