@@ -199,18 +199,18 @@ export default function PlantUMLRenderer({ chart }: PlantUMLRendererProps) {
             </button>
             <div className="w-px h-4 bg-white/20 mx-1" />
             <button
-                onClick={() => handleDownload('svg')}
+                onClick={() => handleDownload('png')}
                 className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition"
-                title="Download SVG"
+                title="Download PNG"
             >
                 <FiDownload className="w-4 h-4 text-gray-300" />
             </button>
             <button
-                onClick={() => handleDownload('png')}
+                onClick={() => handleDownload('svg')}
                 className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition text-xs text-gray-300"
-                title="Download PNG"
+                title="Download SVG"
             >
-                PNG
+                SVG
             </button>
             <div className="w-px h-4 bg-white/20 mx-1" />
             <button
