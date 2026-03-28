@@ -107,9 +107,12 @@ function ChatContent() {
         const determineActiveRole = async () => {
             if (!isAuthenticated) return;
 
+            // Resolve the chat's last_role if available
+            const activeChat = selectedChatId ? chats.find(c => c.id === selectedChatId) : null;
+            const chatLastRole = activeChat?.last_role || null;
+
             let effectiveProjectId = currentProjectId;
             if (!effectiveProjectId && selectedChatId) {
-                const activeChat = chats.find(c => c.id === selectedChatId);
                 effectiveProjectId = activeChat?.project_id || null;
             }
 
@@ -120,6 +123,10 @@ function ChatContent() {
                         // Check if owner
                         if (response.data.owner_id === user?.id) {
                             setIsRoleLocked(false);
+                            // Owner can use any role — restore chat's last role if available
+                            if (chatLastRole) {
+                                setSelectedRole(chatLastRole);
+                            }
                             return;
                         }
 
@@ -137,8 +144,8 @@ function ChatContent() {
                 }
             }
 
-            // Fallback for non-project context: use global role and unlock
-            setSelectedRole(globalRole);
+            // Non-project context: prefer chat's last role, fall back to global role
+            setSelectedRole(chatLastRole || globalRole);
             setIsRoleLocked(false);
         };
 
@@ -244,10 +251,18 @@ function ChatContent() {
             router.replace(`/chat?${params.toString()}`, { scroll: false });
         }
 
-        // DO NOT change currentProjectId. 
+        // Restore last used role for this chat (if not locked by project membership)
+        const chat = chats.find(c => c.id === chatId);
+        if (chat?.last_role && !isRoleLocked) {
+            setSelectedRole(chat.last_role);
+            setGlobalRole(chat.last_role);
+            localStorage.setItem('globalRole', chat.last_role);
+        }
+
+        // DO NOT change currentProjectId.
         // We want to allow viewing a chat without forcing the filter to that project.
         // The user might be in "All Projects" mode and just checking a specific chat.
-        // Changing currentProjectId would trigger the sidebar to filter only that project's chats, 
+        // Changing currentProjectId would trigger the sidebar to filter only that project's chats,
         // which can be disorienting.
 
         setIsLoading(true); // Loading messages
@@ -335,10 +350,16 @@ function ChatContent() {
                 };
                 setMessages((prev) => [...prev, aiMessage]);
 
-                if (!selectedChatId && response.data.chat_id) {
-                    setSelectedChatId(response.data.chat_id);
+                // Update local chat's last_role so role persists across switches
+                const chatId = response.data.chat_id;
+                setChats(prev => prev.map(c =>
+                    c.id === chatId ? { ...c, last_role: selectedRole } : c
+                ));
+
+                if (!selectedChatId && chatId) {
+                    setSelectedChatId(chatId);
                     const params = new URLSearchParams(searchParams.toString());
-                    params.set('chat', response.data.chat_id);
+                    params.set('chat', chatId);
                     const newUrl = `/chat?${params.toString()}`;
                     window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl);
                     fetchChats();

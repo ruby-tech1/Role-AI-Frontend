@@ -132,6 +132,7 @@ export interface ChatSession {
     id: string;
     title: string | null;
     project_id: string | null;
+    last_role: Role | null;
     created_at: string;
     updated_at: string;
 }
