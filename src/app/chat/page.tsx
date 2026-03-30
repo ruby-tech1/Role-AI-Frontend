@@ -265,6 +265,9 @@ function ChatContent() {
         // Changing currentProjectId would trigger the sidebar to filter only that project's chats,
         // which can be disorienting.
 
+        // Clear old content immediately to prevent stale diagrams from flashing
+        setMessages([]);
+        setConversationFiles([]);
         setIsLoading(true); // Loading messages
         try {
             const response = await api.get<ChatMessage[]>(`/chat/${chatId}/messages`);

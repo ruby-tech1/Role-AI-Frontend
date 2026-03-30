@@ -82,25 +82,47 @@ export default function MermaidRenderer({ chart }: MermaidRendererProps) {
     const ref = useRef<HTMLDivElement>(null);
     const [svg, setSvg] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
-    const [id] = useState(() => `mermaid-${Math.random().toString(36).substr(2, 9)}`);
+    // Generate a unique ID per chart content to prevent collisions on chat switch
+    const [renderCounter] = useState(() => Math.random().toString(36).substr(2, 9));
+    const idRef = useRef(`mermaid-${renderCounter}-${Date.now()}`);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [zoom, setZoom] = useState(1);
 
     useEffect(() => {
-        if (chart && ref.current) {
-            setError(null);
-            const cleanedChart = chart.trim().replace(/\r\n/g, '\n');
+        if (!chart || !ref.current) return;
 
-            mermaid.render(id, cleanedChart).then((result) => {
-                setSvg(result.svg);
-            }).catch((err: unknown) => {
-                console.error("Mermaid rendering error:", err);
-                const errorMessage = err instanceof Error ? err.message : String(err);
-                setError(errorMessage);
-                setSvg('');
-            });
-        }
-    }, [chart, id]);
+        // Generate a fresh ID for each render to avoid DOM collisions
+        const renderId = `mermaid-${Math.random().toString(36).substr(2, 9)}-${Date.now()}`;
+        idRef.current = renderId;
+
+        // Clear previous state immediately to prevent old diagram flash
+        setSvg('');
+        setError(null);
+
+        const cleanedChart = chart.trim().replace(/\r\n/g, '\n');
+
+        mermaid.render(renderId, cleanedChart).then((result) => {
+            setSvg(result.svg);
+        }).catch((err: unknown) => {
+            console.error("Mermaid rendering error:", err);
+            const errorMessage = err instanceof Error ? err.message : String(err);
+            setError(errorMessage);
+            setSvg('');
+        });
+
+        // Cleanup: remove stale Mermaid-generated DOM elements
+        return () => {
+            const staleElement = document.getElementById(renderId);
+            if (staleElement) {
+                staleElement.remove();
+            }
+            // Also clean up the d- prefixed temp element Mermaid creates
+            const tempElement = document.getElementById(`d${renderId}`);
+            if (tempElement) {
+                tempElement.remove();
+            }
+        };
+    }, [chart]);
 
     const handleZoomIn = useCallback(() => {
         setZoom(prev => Math.min(prev + 0.25, 3));
