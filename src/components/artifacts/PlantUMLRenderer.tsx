@@ -135,7 +135,7 @@ export default function PlantUMLRenderer({ chart }: PlantUMLRendererProps) {
                 const img = new Image();
                 img.onload = () => {
                     if (ctx) {
-                        ctx.fillStyle = '#1e293b';
+                        ctx.fillStyle = '#ffffff';
                         ctx.fillRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         try {
@@ -217,45 +217,45 @@ export default function PlantUMLRenderer({ chart }: PlantUMLRendererProps) {
             <button
                 onClick={handleZoomOut}
                 disabled={zoom <= 0.5}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition"
                 title="Zoom out"
             >
-                <FiZoomOut className="w-4 h-4 text-gray-300" />
+                <FiZoomOut className="w-4 h-4 text-slate-700" />
             </button>
-            <span className="text-xs text-gray-400 w-12 text-center">{Math.round(zoom * 100)}%</span>
+            <span className="text-xs text-slate-600 w-12 text-center font-medium">{Math.round(zoom * 100)}%</span>
             <button
                 onClick={handleZoomIn}
                 disabled={zoom >= 3}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition"
                 title="Zoom in"
             >
-                <FiZoomIn className="w-4 h-4 text-gray-300" />
+                <FiZoomIn className="w-4 h-4 text-slate-700" />
             </button>
-            <div className="w-px h-4 bg-white/20 mx-1" />
+            <div className="w-px h-4 bg-slate-300 mx-1" />
             <button
                 onClick={() => handleDownload('png')}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition"
                 title="Download PNG"
             >
-                <FiDownload className="w-4 h-4 text-gray-300" />
+                <FiDownload className="w-4 h-4 text-slate-700" />
             </button>
             <button
                 onClick={() => handleDownload('svg')}
-                className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition text-xs text-gray-300"
+                className="px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 transition text-xs text-slate-700 font-medium"
                 title="Download SVG"
             >
                 SVG
             </button>
-            <div className="w-px h-4 bg-white/20 mx-1" />
+            <div className="w-px h-4 bg-slate-300 mx-1" />
             <button
                 onClick={toggleFullscreen}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition"
                 title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
             >
                 {isFullscreen ? (
-                    <FiMinimize2 className="w-4 h-4 text-gray-300" />
+                    <FiMinimize2 className="w-4 h-4 text-slate-700" />
                 ) : (
-                    <FiMaximize2 className="w-4 h-4 text-gray-300" />
+                    <FiMaximize2 className="w-4 h-4 text-slate-700" />
                 )}
             </button>
         </div>
@@ -263,16 +263,16 @@ export default function PlantUMLRenderer({ chart }: PlantUMLRendererProps) {
 
     if (isFullscreen && typeof document !== 'undefined') {
         return createPortal(
-            <div className="fixed inset-0 z-[9999] bg-slate-900/95 flex flex-col">
-                <div className="flex items-center justify-between p-4 border-b border-white/10">
-                    <span className="text-sm text-gray-400">PlantUML Diagram Viewer</span>
+            <div className="fixed inset-0 z-[9999] bg-white flex flex-col">
+                <div className="flex items-center justify-between p-4 border-b border-slate-200 shadow-sm">
+                    <span className="text-sm font-medium text-slate-600">PlantUML Diagram Viewer</span>
                     <div className="flex items-center gap-4">
                         {controls}
                         <button
                             onClick={toggleFullscreen}
-                            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition"
+                            className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition"
                         >
-                            <FiX className="w-5 h-5 text-gray-300" />
+                            <FiX className="w-5 h-5 text-slate-700" />
                         </button>
                     </div>
                 </div>
@@ -285,12 +285,12 @@ export default function PlantUMLRenderer({ chart }: PlantUMLRendererProps) {
     }
 
     return (
-        <div className="plantuml-wrapper bg-slate-900/50 rounded-lg overflow-hidden">
-            <div className="flex items-center justify-between p-2 border-b border-white/10 bg-white/5">
-                <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider pl-2">PlantUML</span>
+        <div className="plantuml-wrapper bg-white border border-slate-200 shadow-sm rounded-lg overflow-hidden">
+            <div className="flex items-center justify-between p-2 border-b border-slate-200 bg-slate-50">
+                <span className="text-xs text-slate-500 font-bold uppercase tracking-wider pl-2">PlantUML</span>
                 {controls}
             </div>
-            <div className="p-4 overflow-auto max-h-[500px]" ref={ref}>
+            <div className="p-4 overflow-auto max-h-[500px] bg-white" ref={ref}>
                 {diagramContent}
             </div>
         </div>

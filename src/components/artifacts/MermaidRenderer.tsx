@@ -8,75 +8,65 @@ mermaid.initialize({
     theme: 'base',
     securityLevel: 'loose',
     themeVariables: {
-        // Base colors
-        primaryColor: '#0ea5e9',
-        primaryTextColor: '#f8fafc',
-        primaryBorderColor: '#38bdf8',
-        secondaryColor: '#8b5cf6',
-        secondaryTextColor: '#f8fafc',
-        secondaryBorderColor: '#a78bfa',
-        tertiaryColor: '#06b6d4',
-        tertiaryTextColor: '#f8fafc',
-        tertiaryBorderColor: '#22d3ee',
+        // 2-color scheme: white background + deep blue accent
+        primaryColor: '#1e3a5f',
+        primaryTextColor: '#ffffff',
+        primaryBorderColor: '#1e3a5f',
+        secondaryColor: '#d1e2f2',
+        secondaryTextColor: '#1e3a5f',
+        secondaryBorderColor: '#1e3a5f',
+        tertiaryColor: '#e8f0f8',
+        tertiaryTextColor: '#1e3a5f',
+        tertiaryBorderColor: '#1e3a5f',
 
-        // Background
-        background: '#0f172a',
-        mainBkg: '#1e293b',
-        nodeBorder: '#38bdf8',
+        // White background
+        background: '#ffffff',
+        mainBkg: '#1e3a5f',
+        nodeBorder: '#1e3a5f',
 
-        // Text
-        lineColor: '#94a3b8',
-        textColor: '#e2e8f0',
+        // Text & lines
+        lineColor: '#1e3a5f',
+        textColor: '#1e3a5f',
 
         // Flowchart
-        nodeTextColor: '#f8fafc',
+        nodeTextColor: '#ffffff',
 
         // Sequence diagram
-        actorBkg: '#0ea5e9',
-        actorBorder: '#38bdf8',
-        actorTextColor: '#f8fafc',
-        actorLineColor: '#64748b',
-        signalColor: '#e2e8f0',
-        signalTextColor: '#e2e8f0',
-        labelBoxBkgColor: '#1e293b',
-        labelBoxBorderColor: '#38bdf8',
-        labelTextColor: '#f8fafc',
-        loopTextColor: '#f8fafc',
-        activationBorderColor: '#38bdf8',
-        activationBkgColor: '#1e3a5f',
-        sequenceNumberColor: '#f8fafc',
+        actorBkg: '#1e3a5f',
+        actorBorder: '#1e3a5f',
+        actorTextColor: '#ffffff',
+        actorLineColor: '#1e3a5f',
+        signalColor: '#1e3a5f',
+        signalTextColor: '#1e3a5f',
+        labelBoxBkgColor: '#ffffff',
+        labelBoxBorderColor: '#1e3a5f',
+        labelTextColor: '#1e3a5f',
+        loopTextColor: '#1e3a5f',
+        activationBorderColor: '#1e3a5f',
+        activationBkgColor: '#d1e2f2',
+        sequenceNumberColor: '#ffffff',
 
         // Class diagram
-        classText: '#f8fafc',
+        classText: '#ffffff',
 
         // ER diagram
-        entityBkg: '#1e293b',
-        entityTextColor: '#f8fafc',
+        entityBkg: '#1e3a5f',
+        entityTextColor: '#ffffff',
 
         // Notes
-        noteBkgColor: '#854d0e',
-        noteTextColor: '#fef9c3',
-        noteBorderColor: '#ca8a04',
+        noteBkgColor: '#d1e2f2',
+        noteTextColor: '#1e3a5f',
+        noteBorderColor: '#1e3a5f',
 
         // Edges
-        edgeLabelBackground: '#1e293b',
+        edgeLabelBackground: '#ffffff',
 
         // Pie chart
-        pie1: '#0ea5e9',
-        pie2: '#8b5cf6',
-        pie3: '#f43f5e',
-        pie4: '#10b981',
-        pie5: '#f59e0b',
-        pie6: '#06b6d4',
-        pie7: '#ec4899',
-        pie8: '#14b8a6',
-
-        // Gantt
-        cScale0: '#0ea5e9',
-        cScale1: '#8b5cf6',
-        cScale2: '#f43f5e',
-        cScale3: '#10b981',
-        cScale4: '#f59e0b',
+        pie1: '#1e3a5f',
+        pie2: '#4a7fb5',
+        pie3: '#7baad4',
+        pie4: '#a8c8e8',
+        pie5: '#d1e2f2',
 
         // Font
         fontFamily: '"Inter", "Segoe UI", sans-serif',
@@ -174,7 +164,7 @@ export default function MermaidRenderer({ chart }: MermaidRendererProps) {
             const img = new Image();
             img.onload = () => {
                 if (ctx) {
-                    ctx.fillStyle = '#1e293b';
+                    ctx.fillStyle = '#ffffff';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     try {
@@ -240,45 +230,45 @@ export default function MermaidRenderer({ chart }: MermaidRendererProps) {
             <button
                 onClick={handleZoomOut}
                 disabled={zoom <= 0.5}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition"
                 title="Zoom out"
             >
-                <FiZoomOut className="w-4 h-4 text-gray-300" />
+                <FiZoomOut className="w-4 h-4 text-slate-700" />
             </button>
-            <span className="text-xs text-gray-400 w-12 text-center">{Math.round(zoom * 100)}%</span>
+            <span className="text-xs text-slate-600 w-12 text-center font-medium">{Math.round(zoom * 100)}%</span>
             <button
                 onClick={handleZoomIn}
                 disabled={zoom >= 3}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition"
                 title="Zoom in"
             >
-                <FiZoomIn className="w-4 h-4 text-gray-300" />
+                <FiZoomIn className="w-4 h-4 text-slate-700" />
             </button>
-            <div className="w-px h-4 bg-white/20 mx-1" />
+            <div className="w-px h-4 bg-slate-300 mx-1" />
             <button
                 onClick={() => handleDownload('png')}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition"
                 title="Download PNG"
             >
-                <FiDownload className="w-4 h-4 text-gray-300" />
+                <FiDownload className="w-4 h-4 text-slate-700" />
             </button>
             <button
                 onClick={() => handleDownload('svg')}
-                className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition text-xs text-gray-300"
+                className="px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 transition text-xs text-slate-700 font-medium"
                 title="Download SVG"
             >
                 SVG
             </button>
-            <div className="w-px h-4 bg-white/20 mx-1" />
+            <div className="w-px h-4 bg-slate-300 mx-1" />
             <button
                 onClick={toggleFullscreen}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition"
                 title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
             >
                 {isFullscreen ? (
-                    <FiMinimize2 className="w-4 h-4 text-gray-300" />
+                    <FiMinimize2 className="w-4 h-4 text-slate-700" />
                 ) : (
-                    <FiMaximize2 className="w-4 h-4 text-gray-300" />
+                    <FiMaximize2 className="w-4 h-4 text-slate-700" />
                 )}
             </button>
         </div>
@@ -286,16 +276,16 @@ export default function MermaidRenderer({ chart }: MermaidRendererProps) {
 
     if (isFullscreen && typeof document !== 'undefined') {
         return createPortal(
-            <div className="fixed inset-0 z-[9999] bg-slate-900/95 flex flex-col">
-                <div className="flex items-center justify-between p-4 border-b border-white/10">
-                    <span className="text-sm text-gray-400">Diagram Viewer</span>
+            <div className="fixed inset-0 z-[9999] bg-white flex flex-col">
+                <div className="flex items-center justify-between p-4 border-b border-slate-200 shadow-sm">
+                    <span className="text-sm font-medium text-slate-600">Diagram Viewer</span>
                     <div className="flex items-center gap-4">
                         {controls}
                         <button
                             onClick={toggleFullscreen}
-                            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition"
+                            className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition"
                         >
-                            <FiX className="w-5 h-5 text-gray-300" />
+                            <FiX className="w-5 h-5 text-slate-700" />
                         </button>
                     </div>
                 </div>
@@ -308,11 +298,11 @@ export default function MermaidRenderer({ chart }: MermaidRendererProps) {
     }
 
     return (
-        <div className="mermaid-wrapper bg-slate-900/50 rounded-lg overflow-hidden">
-            <div className="flex items-center justify-end p-2 border-b border-white/10 bg-white/5">
+        <div className="mermaid-wrapper bg-white border border-slate-200 shadow-sm rounded-lg overflow-hidden">
+            <div className="flex items-center justify-end p-2 border-b border-slate-200 bg-slate-50">
                 {controls}
             </div>
-            <div className="p-4 overflow-auto max-h-[500px]" ref={ref}>
+            <div className="p-4 overflow-auto max-h-[500px] bg-white" ref={ref}>
                 {diagramContent}
             </div>
         </div>
