@@ -5,8 +5,83 @@ import { FiMaximize2, FiMinimize2, FiZoomIn, FiZoomOut, FiDownload, FiX } from '
 
 mermaid.initialize({
     startOnLoad: false,
-    theme: 'dark',
+    theme: 'base',
     securityLevel: 'loose',
+    themeVariables: {
+        // Base colors
+        primaryColor: '#0ea5e9',
+        primaryTextColor: '#f8fafc',
+        primaryBorderColor: '#38bdf8',
+        secondaryColor: '#8b5cf6',
+        secondaryTextColor: '#f8fafc',
+        secondaryBorderColor: '#a78bfa',
+        tertiaryColor: '#06b6d4',
+        tertiaryTextColor: '#f8fafc',
+        tertiaryBorderColor: '#22d3ee',
+
+        // Background
+        background: '#0f172a',
+        mainBkg: '#1e293b',
+        nodeBorder: '#38bdf8',
+
+        // Text
+        lineColor: '#94a3b8',
+        textColor: '#e2e8f0',
+
+        // Flowchart
+        nodeTextColor: '#f8fafc',
+
+        // Sequence diagram
+        actorBkg: '#0ea5e9',
+        actorBorder: '#38bdf8',
+        actorTextColor: '#f8fafc',
+        actorLineColor: '#64748b',
+        signalColor: '#e2e8f0',
+        signalTextColor: '#e2e8f0',
+        labelBoxBkgColor: '#1e293b',
+        labelBoxBorderColor: '#38bdf8',
+        labelTextColor: '#f8fafc',
+        loopTextColor: '#f8fafc',
+        activationBorderColor: '#38bdf8',
+        activationBkgColor: '#1e3a5f',
+        sequenceNumberColor: '#f8fafc',
+
+        // Class diagram
+        classText: '#f8fafc',
+
+        // ER diagram
+        entityBkg: '#1e293b',
+        entityTextColor: '#f8fafc',
+
+        // Notes
+        noteBkgColor: '#854d0e',
+        noteTextColor: '#fef9c3',
+        noteBorderColor: '#ca8a04',
+
+        // Edges
+        edgeLabelBackground: '#1e293b',
+
+        // Pie chart
+        pie1: '#0ea5e9',
+        pie2: '#8b5cf6',
+        pie3: '#f43f5e',
+        pie4: '#10b981',
+        pie5: '#f59e0b',
+        pie6: '#06b6d4',
+        pie7: '#ec4899',
+        pie8: '#14b8a6',
+
+        // Gantt
+        cScale0: '#0ea5e9',
+        cScale1: '#8b5cf6',
+        cScale2: '#f43f5e',
+        cScale3: '#10b981',
+        cScale4: '#f59e0b',
+
+        // Font
+        fontFamily: '"Inter", "Segoe UI", sans-serif',
+        fontSize: '14px',
+    },
 });
 
 interface MermaidRendererProps {
